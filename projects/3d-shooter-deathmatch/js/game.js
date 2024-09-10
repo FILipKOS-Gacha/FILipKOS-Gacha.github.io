@@ -8,12 +8,11 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const controls = new THREE.PointerLockControls(camera, canvas);
 scene.add(camera);
 
-// Function call to generate the map
 generateMap(scene);
 
 function animate() {
     requestAnimationFrame(animate);
-    updateControls(); // Ensure controls are updated
+    updateControls();
     renderer.render(scene, camera);
 }
 
@@ -25,7 +24,6 @@ function onWindowResize() {
 
 window.addEventListener('resize', onWindowResize, false);
 
-// Load physics and game loop scripts
 const physicsScript = document.createElement('script');
 physicsScript.src = 'js/physics.js';
 document.body.appendChild(physicsScript);
