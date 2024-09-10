@@ -61,8 +61,8 @@
             padding: 10px;
             margin-top: 20px;
         }
-        /* Contact tab styling */
-        .contact-tab {
+        /* Contact and feedback tab styling */
+        .tab {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -72,8 +72,9 @@
             border-radius: 8px;
             cursor: pointer;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            margin-top: 10px;
         }
-        .contact-info {
+        .contact-info, .feedback-section {
             display: none;
             position: fixed;
             bottom: 70px;
@@ -90,6 +91,39 @@
         }
         .contact-info a:hover {
             color: #e67e22;
+        }
+        /* Feedback form */
+        .feedback-form input, .feedback-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #34495e;
+            color: white;
+        }
+        .feedback-form button {
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .feedback-form button:hover {
+            background-color: #16a085;
+        }
+        .feedback-list {
+            margin-top: 20px;
+        }
+        .feedback-list .feedback-item {
+            background: #34495e;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .feedback-list .feedback-item strong {
+            color: #1abc9c;
         }
     </style>
 </head>
@@ -121,14 +155,28 @@
     </section>
 
     <!-- Contact tab -->
-    <div class="contact-tab" onclick="toggleContacts()">
-        Contact Me
-    </div>
-    
+    <div class="tab" onclick="toggleContacts()">Contact Me</div>
+
+    <!-- Feedback tab -->
+    <div class="tab" style="bottom: 70px;" onclick="toggleFeedback()">Leave Feedback</div>
+
     <!-- Contact info -->
     <div class="contact-info" id="contact-info">
         <p><strong>Discord:</strong> filipkos1337</p>
         <p><strong>Twitter:</strong> <a href="https://twitter.com/FILipKOS_Gacha" target="_blank">@FILipKOS_Gacha</a></p>
+    </div>
+
+    <!-- Feedback form and comments -->
+    <div class="feedback-section" id="feedback-section">
+        <h3>Leave a Comment</h3>
+        <form class="feedback-form" onsubmit="addFeedback(event)">
+            <input type="text" id="nickname" placeholder="Your nickname (optional)">
+            <textarea id="comment" rows="4" placeholder="Your comment" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+        <div class="feedback-list" id="feedback-list">
+            <!-- User feedback will be displayed here -->
+        </div>
     </div>
 
     <footer>
@@ -143,6 +191,31 @@
             } else {
                 contactInfo.style.display = "none";
             }
+        }
+
+        function toggleFeedback() {
+            var feedbackSection = document.getElementById("feedback-section");
+            if (feedbackSection.style.display === "none" || feedbackSection.style.display === "") {
+                feedbackSection.style.display = "block";
+            } else {
+                feedbackSection.style.display = "none";
+            }
+        }
+
+        function addFeedback(event) {
+            event.preventDefault();
+            var nickname = document.getElementById("nickname").value || "Guest";
+            var comment = document.getElementById("comment").value;
+
+            var feedbackList = document.getElementById("feedback-list");
+            var feedbackItem = document.createElement("div");
+            feedbackItem.className = "feedback-item";
+            feedbackItem.innerHTML = "<strong>" + nickname + ":</strong> " + comment;
+            feedbackList.appendChild(feedbackItem);
+
+            // Clear the form
+            document.getElementById("nickname").value = "";
+            document.getElementById("comment").value = "";
         }
     </script>
 </body>
