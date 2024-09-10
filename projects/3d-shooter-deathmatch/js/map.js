@@ -11,8 +11,7 @@ function createCheckerboardTexture(size = 64, tileSize = 8) {
         }
     }
 
-    const texture = new THREE.CanvasTexture(canvas);
-    return texture;
+    return new THREE.CanvasTexture(canvas);
 }
 
 function generateMap(scene) {
