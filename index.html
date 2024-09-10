@@ -4,65 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Filip's projects</title>
+    <title>Filip's Projects</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: 'Trebuchet MS', sans-serif;
+            background-color: #121212;
+            color: #f4f4f4;
             margin: 0;
             padding: 0;
         }
         header {
-            background-color: #333;
-            color: white;
+            background-color: #2c3e50;
+            color: #e74c3c;
             padding: 20px;
             text-align: center;
+            border-bottom: 5px solid #e67e22;
         }
         h1 {
             margin: 0;
+            font-size: 3em;
+            font-family: 'Gacha Club', sans-serif;
+        }
+        p {
+            font-family: 'Arial', sans-serif;
         }
         section {
             padding: 20px;
         }
         .project {
-            background: white;
+            background: #34495e;
             margin: 20px 0;
             padding: 15px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+        .project:hover {
+            transform: scale(1.05);
+        }
+        .project h3 {
+            color: #1abc9c;
         }
         .project a {
             text-decoration: none;
             color: #3498db;
             font-weight: bold;
+            transition: color 0.2s;
+        }
+        .project a:hover {
+            color: #e67e22;
         }
         footer {
-            background-color: #333;
+            background-color: #2c3e50;
             color: white;
             text-align: center;
             padding: 10px;
             margin-top: 20px;
         }
+        /* Contact tab styling */
+        .contact-tab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #1abc9c;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+        .contact-info {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background-color: #2c3e50;
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+        .contact-info a {
+            color: #1abc9c;
+            text-decoration: none;
+        }
+        .contact-info a:hover {
+            color: #e67e22;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>My projects..</h1>
+        <h1>My Projects</h1>
         <p>Welcome to my GitHub.io website!</p>
     </header>
 
     <section>
         <h2>My Projects</h2>
         <div class="project">
-            <h3>3D Shooter Deathmatch test</h3>
+            <h3>3D Shooter Deathmatch Test</h3>
             <p>A fast-paced 3D shooter with random map resets every 20 minutes. Built using HTML and JavaScript.</p>
             <a href="https://github.com/FILipKOS-Gacha/3d-shooter-deathmatch" target="_blank">View on GitHub</a>
         </div>
 
         <div class="project">
-            <h3>Filip's weapon pack!</h3>
-            <p>A weapon pack i've decided to make for GMod, it only works for steam version.</p>
+            <h3>Filip's Weapon Pack!</h3>
+            <p>A weapon pack I've decided to make for GMod. It only works for the Steam version.</p>
             <a href="https://github.com/FILipKOS-Gacha/filips-weapon-pack-gmod" target="_blank">View on GitHub</a>
         </div>
 
@@ -73,8 +120,30 @@
         </div>
     </section>
 
+    <!-- Contact tab -->
+    <div class="contact-tab" onclick="toggleContacts()">
+        Contact Me
+    </div>
+    
+    <!-- Contact info -->
+    <div class="contact-info" id="contact-info">
+        <p><strong>Discord:</strong> filipkos1337</p>
+        <p><strong>Twitter:</strong> <a href="https://twitter.com/FILipKOS_Gacha" target="_blank">@FILipKOS_Gacha</a></p>
+    </div>
+
     <footer>
         <p>© 2024 FILipKOS | <a href="https://github.com/FILipKOS-Gacha" style="color: #3498db;">GitHub Profile</a></p>
     </footer>
+
+    <script>
+        function toggleContacts() {
+            var contactInfo = document.getElementById("contact-info");
+            if (contactInfo.style.display === "none" || contactInfo.style.display === "") {
+                contactInfo.style.display = "block";
+            } else {
+                contactInfo.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>
