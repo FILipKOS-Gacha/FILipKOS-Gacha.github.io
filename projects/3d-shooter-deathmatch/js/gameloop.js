@@ -4,6 +4,8 @@ let startTime = Date.now();
 
 function resetMap() {
     // Implement map reset logic here
+    scene.clear(); // Clear the scene
+    generateMap(); // Regenerate the map
 }
 
 function updateGame() {
