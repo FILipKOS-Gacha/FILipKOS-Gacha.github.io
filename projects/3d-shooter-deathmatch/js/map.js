@@ -15,7 +15,7 @@ function createCheckerboardTexture(size = 64, tileSize = 8) {
     return texture;
 }
 
-function generateMap() {
+function generateMap(scene) {
     const mapWidth = 100;
     const mapHeight = 100;
 
