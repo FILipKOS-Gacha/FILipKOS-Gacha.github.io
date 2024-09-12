@@ -38,14 +38,49 @@
             border-radius: 8px;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
             text-align: center;
+            display: inline-block;
+            width: 30%;
+            margin-right: 2%;
         }
         .portfolio-item img {
-            max-width: 100%;
+            width: 100%;
             border-radius: 8px;
-            transition: transform 0.2s;
+            cursor: pointer;
         }
         .portfolio-item img:hover {
             transform: scale(1.05);
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+        .modal-content:hover {
+            transform: scale(1.05);
+        }
+        /* Close button */
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f4f4f4;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
         }
         footer {
             background-color: #2c3e50;
@@ -66,22 +101,41 @@
         <h2>Renders</h2>
 
         <div class="portfolio-item">
-            <img src="images/Dont even hide.png" alt="Don't even hide..">
+            <img src="images/Dont even hide.png" alt="Don't even hide.." onclick="openModal(this)">
         </div>
 
         <div class="portfolio-item">
-            <img src="images/Epic render.png" alt="*Epic walking out of fire!!!111!!1*">
+            <img src="images/Epic render.png" alt="*Epic walking out of fire!!!111!!1*" onclick="openModal(this)">
         </div>
 
         <div class="portfolio-item">
-            <img src="images/Test pose1.png" alt="Test pose on Gordon Freeman.">
+            <img src="images/Test pose1.png" alt="Test pose on Gordon Freeman." onclick="openModal(this)">
         </div>
 
-        <!-- Add more renders by following the same pattern -->
     </section>
 
     <footer>
         <p>© 2024 FILipKOS | <a href="https://github.com/FILipKOS-Gacha" style="color: #3498db;">GitHub Profile</a></p>
     </footer>
+
+    <!-- Modal to show full-sized images -->
+    <div id="myModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+
+    <script>
+        function openModal(imgElement) {
+            var modal = document.getElementById("myModal");
+            var modalImg = document.getElementById("img01");
+            modal.style.display = "block";
+            modalImg.src = imgElement.src;
+        }
+
+        function closeModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+    </script>
 </body>
 </html>
