@@ -6,183 +6,225 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Filip's Projects</title>
     <style>
+        /* Base styling */
         body {
-            font-family: 'Trebuchet MS', sans-serif;
-            background-color: #121212;
-            color: #f4f4f4;
             margin: 0;
             padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            overflow-x: hidden;
         }
+
         header {
-            background-color: #2c3e50;
-            color: #e74c3c;
-            padding: 20px;
             text-align: center;
-            border-bottom: 5px solid #e67e22;
-            position: relative;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 2s ease;
         }
+
         h1 {
+            font-size: 4em;
             margin: 0;
-            font-size: 3em;
-            font-family: 'Gacha Club', sans-serif;
+            background: linear-gradient(90deg, #0fd850, #f9f047);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: glow 2s infinite alternate;
         }
+
         p {
-            font-family: 'Arial', sans-serif;
+            font-size: 1.2em;
+            color: #ddd;
         }
+
         section {
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px;
         }
+
         .project {
-            background: #34495e;
+            width: 90%;
+            max-width: 800px;
             margin: 20px 0;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
+
         .project:hover {
-            transform: scale(1.05);
+            transform: translateY(-10px);
+            box-shadow: 0 12px 50px rgba(0, 255, 150, 0.4);
         }
+
         .project h3 {
-            color: #1abc9c;
+            margin-top: 0;
+            font-size: 2em;
+            color: #0fd850;
         }
+
         .project a {
             text-decoration: none;
-            color: #3498db;
+            color: #f9f047;
             font-weight: bold;
-            transition: color 0.2s;
+            transition: color 0.3s;
         }
+
         .project a:hover {
-            color: #e67e22;
+            color: #ff4757;
         }
+
+        .video-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        iframe {
+            border-radius: 12px;
+            transition: transform 0.3s;
+        }
+
+        iframe:hover {
+            transform: scale(1.05);
+        }
+
         footer {
-            background-color: #2c3e50;
-            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
             text-align: center;
-            padding: 10px;
-            margin-top: 20px;
+            backdrop-filter: blur(10px);
+            margin-top: 50px;
         }
-        /* Contact tab styling */
+
+        footer a {
+            color: #0fd850;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            color: #f9f047;
+        }
+
+        /* Contact Tab */
         .contact-tab {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #1abc9c;
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
+            background: linear-gradient(45deg, #0fd850, #02aab0);
+            color: #fff;
+            padding: 15px;
+            border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 255, 150, 0.4);
+            transition: transform 0.3s;
         }
+
+        .contact-tab:hover {
+            transform: scale(1.1);
+        }
+
         .contact-info {
             display: none;
             position: fixed;
-            bottom: 70px;
+            bottom: 80px;
             right: 20px;
-            background-color: #2c3e50;
+            background: rgba(0, 0, 0, 0.8);
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 12px;
             color: white;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
+
         .contact-info a {
-            color: #1abc9c;
-            text-decoration: none;
+            color: #0fd850;
         }
+
         .contact-info a:hover {
-            color: #e67e22;
+            color: #f9f047;
         }
-        /* YouTube Video Tab */
-        .video-tab {
-            background-color: #e74c3c;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            border-bottom: 5px solid #c0392b;
-            cursor: pointer;
+
+        /* Animations */
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 10px #0fd850, 0 0 20px #0fd850;
+            }
+            100% {
+                text-shadow: 0 0 20px #f9f047, 0 0 30px #f9f047;
+            }
         }
-        .video-container {
-            display: none;
-            background-color: #34495e;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px;
-            text-align: center;
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>My Projects</h1>
-        <p>Welcome to my GitHub.io website!</p>
+        <h1>Filip's Projects</h1>
+        <p>Welcome to my futuristic portfolio!</p>
     </header>
 
-    <!-- YouTube Video Tab -->
-    <div class="video-tab" onclick="toggleVideo()">
-        Latest YouTube Video
-    </div>
-
-    <!-- YouTube Video Container -->
-    <div class="video-container" id="video-container">
-        <!-- Embed your playlist here -->
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLSHKLavP3e54hrQ5urKe9yTaVvnT8BFHP&si=Fd44K4upx-SMAfq7" 
-        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen></iframe>
+    <div class="video-container">
+        <iframe width="640" height="360" 
+            src="https://www.youtube.com/embed/videoseries?list=PLSHKLavP3e54hrQ5urKe9yTaVvnT8BFHP&si=Fd44K4upx-SMAfq7" 
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen></iframe>
     </div>
 
     <section>
-        <h2>My Projects</h2>
         <div class="project">
             <h3>3D Shooter Deathmatch Test</h3>
-            <p>A fast-paced 3D shooter with random map resets every 20 minutes. Built using HTML and JavaScript.</p>
-            <a href="https://filipkos-gacha.github.io/projects/3d-shooter-deathmatch/" target="_blank">Click to test it out.</a>
+            <p>A fast-paced shooter with random map resets every 20 minutes. Built using HTML and JavaScript.</p>
+            <a href="https://filipkos-gacha.github.io/projects/3d-shooter-deathmatch/" target="_blank">Click to test it out</a>
         </div>
 
         <div class="project">
-            <h3>Filip's Weapon Pack!</h3>
-            <p>A weapon pack I've decided to make for GMod. It only works for the Steam version.</p>
-            <a href="https://github.com/FILipKOS-Gacha/filips-weapon-pack-gmod" target="_blank">View on GitHub (Not available yet.)</a>
+            <h3>Filip's Weapon Pack</h3>
+            <p>A collection of unique weapons for GMod. Steam version required.</p>
+            <a href="https://github.com/FILipKOS-Gacha/filips-weapon-pack-gmod" target="_blank">View on GitHub</a>
         </div>
 
         <div class="project">
             <h3>Portfolio</h3>
-            <p>My SFM Portfolio.</p>
-            <a href="https://filipkos-gacha.github.io/projects/portfolio" target="_blank">Click to check out!</a>
+            <p>Explore my SFM renders and creative work.</p>
+            <a href="https://filipkos-gacha.github.io/projects/portfolio" target="_blank">Check it out!</a>
         </div>
     </section>
 
-    <!-- Contact tab -->
     <div class="contact-tab" onclick="toggleContacts()">
         Contact Me
     </div>
-    
-    <!-- Contact info -->
+
     <div class="contact-info" id="contact-info">
         <p><strong>Discord:</strong> filipkos1337</p>
         <p><strong>Twitter:</strong> <a href="https://twitter.com/FILipKOS_Gacha" target="_blank">@FILipKOS_Gacha</a></p>
     </div>
 
     <footer>
-        <p>© 2024 FILipKOS | <a href="https://github.com/FILipKOS-Gacha" style="color: #3498db;">GitHub Profile</a></p>
+        <p>© 2024 FILipKOS | <a href="https://github.com/FILipKOS-Gacha">GitHub Profile</a></p>
     </footer>
 
     <script>
         function toggleContacts() {
-            var contactInfo = document.getElementById("contact-info");
-            if (contactInfo.style.display === "none" || contactInfo.style.display === "") {
-                contactInfo.style.display = "block";
-            } else {
-                contactInfo.style.display = "none";
-            }
-        }
-
-        function toggleVideo() {
-            var videoContainer = document.getElementById("video-container");
-            if (videoContainer.style.display === "none" || videoContainer.style.display === "") {
-                videoContainer.style.display = "block";
-            } else {
-                videoContainer.style.display = "none";
-            }
+            const contactInfo = document.getElementById('contact-info');
+            contactInfo.style.display = contactInfo.style.display === 'block' ? 'none' : 'block';
         }
     </script>
 </body>
