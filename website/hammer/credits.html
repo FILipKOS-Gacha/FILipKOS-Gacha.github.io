@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worldcraft++</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Worldcraft++ - Credits</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -19,19 +19,34 @@
 
         <!-- Navigation Bar -->
         <nav class="main-nav">
-            <a href="index.html" class="sound-btn active">Home</a>
+            <a href="index.html" class="sound-btn">Home</a>
             <a href="updates.html" class="sound-btn">Updates</a>
             <a href="download.html" class="sound-btn">Download</a>
-            <a href="credits.html" class="sound-btn">Credits</a>
+            <a href="credits.html" class="sound-btn active">Credits</a>
         </nav>
 
         <!-- Main Content Area -->
         <main class="content-container">
             
             <section class="intro-box">
-                <h2>Welcome to the Worldcraft++</h2>
-                <p>This is the central hub for the upcoming custom build of the leaked Hammer Editor. Modeled after the modern community tools like Hammer++ and J.A.C.K, this project aims to specifically stabilize and tailor the editor for the 2003 leaked build of Half-Life 2.</p>
-                <p>Stay tuned for updates, documentation, and the eventual public beta release! Feel free to navigate using the tabs above to track our progress.</p>
+                <h2>Project Credits</h2>
+                
+                <p><strong>Programmer:</strong> <span class="hover-name" title="alternatively as FILipKOS - Gacha">FILipKOS</span></p>
+                <p><strong>LeakNet Creator:</strong> <a href="https://leaknet.org" target="_blank" class="credit-link">VXP</a></p>
+
+                <br>
+                <h3>Contributors who gave ideas and helped to add features:</h3>
+                <ul class="feature-list">
+                    <li>soup2.0</li>
+                    <li>A bread</li>
+                    <li><a href="https://www.youtube.com/@TheOneEpicplayer" target="_blank" class="credit-link">The One Epicplayer</a></li>
+                    <li>VXP (again :D)</li>
+                    <li><a href="https://discord.gg/wRnRpFR" target="_blank" class="credit-link">And the Half-Life Discord Community &lt;3</a></li>
+                </ul>
+
+                <hr class="credit-divider">
+
+                <p class="dedication">Dedicated to the Source Modding Community. Both retail and Beta.</p>
             </section>
 
         </main>
@@ -48,7 +63,6 @@
 
         document.querySelectorAll('.sound-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
-                // Play sound
                 buttonSound.currentTime = 0;
                 buttonSound.play().catch(err => { console.log("Audio blocked until interaction."); });
 
@@ -57,8 +71,6 @@
                     if (!isHashLink && this.target !== "_blank") {
                         e.preventDefault(); 
                         const targetUrl = this.href;
-                        
-                        // Wait 200ms to allow sound to play before the browser navigates away
                         setTimeout(() => {
                             window.location.href = targetUrl;
                         }, 200); 
