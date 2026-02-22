@@ -1,12 +1,11 @@
-/* Old Steam / VGUI2 2003 Color Palette */
+/* 2003 Old Steam / VGUI2 Web Palette */
 :root {
-    --bg-outside: #384030;
-    --vgui-dark: #2e3626;
-    --vgui-medium: #4b5541;
-    --vgui-light: #758461;
-    --vgui-text: #afbd9f;
-    --vgui-text-hover: #ffffff;
-    --vgui-text-active: #e9ab17; /* Classic GoldSource highlight orange */
+    --bg-dark: #2e3626;         /* Deep background */
+    --panel-color: #4b5541;     /* Main container green */
+    --panel-border: #758461;    /* Lighter border outline */
+    --text-main: #afbd9f;       /* Standard VGUI text color */
+    --text-bright: #ffffff;     /* Bright text for headings */
+    --highlight: #e9ab17;       /* GoldSource classic orange */
 }
 
 * {
@@ -14,179 +13,109 @@
 }
 
 body {
-    background-color: var(--bg-outside);
-    color: var(--vgui-text);
+    background-color: var(--bg-dark);
+    background-image: linear-gradient(to bottom, #2e3626, #1c2216); /* Subtle gradient like old Steam menus */
+    color: var(--text-main);
     font-family: Tahoma, Verdana, Arial, sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-}
-
-/* Main Window Container */
-.vgui-window {
-    background-color: var(--vgui-medium);
-    width: 100%;
-    max-width: 800px;
-    border-top: 2px solid var(--vgui-light);
-    border-left: 2px solid var(--vgui-light);
-    border-bottom: 2px solid var(--vgui-dark);
-    border-right: 2px solid var(--vgui-dark);
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-    display: flex;
-    flex-direction: column;
-}
-
-/* Classic Title Bar */
-.vgui-titlebar {
-    background: linear-gradient(to right, #404b36, var(--vgui-dark));
-    color: var(--vgui-text-hover);
-    padding: 4px 8px;
-    font-weight: bold;
-    font-size: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--vgui-dark);
-}
-
-.vgui-controls button {
-    background-color: var(--vgui-light);
-    color: var(--bg-outside);
-    border-top: 1px solid #9ba78d;
-    border-left: 1px solid #9ba78d;
-    border-bottom: 1px solid var(--vgui-dark);
-    border-right: 1px solid var(--vgui-dark);
-    font-size: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    height: 18px;
-    width: 18px;
     padding: 0;
+    line-height: 1.6;
 }
 
-/* Navigation Tabs */
-.vgui-nav {
-    display: flex;
-    padding: 10px 10px 0 10px;
-    gap: 5px;
+.page-wrapper {
+    max-width: 960px;
+    margin: 40px auto;
+    background-color: var(--panel-color);
+    border: 2px solid var(--panel-border);
+    box-shadow: 0px 8px 24px rgba(0,0,0,0.8);
 }
 
-.vgui-nav a {
-    background-color: var(--vgui-medium);
-    color: var(--vgui-text);
-    text-decoration: none;
-    padding: 6px 15px;
-    font-weight: bold;
-    border-top: 2px solid var(--vgui-light);
-    border-left: 2px solid var(--vgui-light);
-    border-bottom: 2px solid var(--vgui-dark);
-    border-right: 2px solid var(--vgui-dark);
-}
-
-.vgui-nav a:hover, button.sound-btn:not(.disabled-btn):hover {
-    color: var(--vgui-text-hover);
-    background-color: #55604b;
-    cursor: url(https://cur.cursors-4u.net/games/gam-2/gam150.cur), pointer; /* Half-Life style crosshair cursor concept (optional) */
-}
-
-/* Active Tab mimics being inset/pressed */
-.vgui-nav a.active {
-    background-color: var(--vgui-dark);
-    color: var(--vgui-text-active);
-    border-top: 2px solid var(--vgui-dark);
-    border-left: 2px solid var(--vgui-dark);
-    border-bottom: 2px solid var(--vgui-medium);
-    border-right: 2px solid var(--vgui-light);
-}
-
-.vgui-content {
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Inset Panels */
-.vgui-panel {
-    background-color: var(--vgui-dark);
-    border-top: 2px solid #1a2016;
-    border-left: 2px solid #1a2016;
-    border-bottom: 2px solid var(--vgui-light);
-    border-right: 2px solid var(--vgui-light);
-    padding: 15px;
-}
-
-.header-panel {
+/* Header Banner */
+.main-header {
+    background-color: #384030;
+    padding: 40px 30px;
+    border-bottom: 2px solid var(--panel-border);
     text-align: center;
 }
 
-.vgui-layout {
-    display: flex;
-    gap: 15px;
-}
-
-.main-col {
-    flex: 2;
-}
-
-.side-col {
-    flex: 1;
-}
-
-h1, h2, h3 {
-    margin-top: 0;
-    color: var(--vgui-text-active);
-    font-weight: normal;
-}
-
-h1 { font-size: 20px; }
-h2 { font-size: 16px; border-bottom: 1px solid var(--vgui-medium); padding-bottom: 5px; }
-h3 { font-size: 14px; }
-
-ul {
-    padding-left: 20px;
-    margin-bottom: 0;
-}
-
-li {
-    margin-bottom: 5px;
-}
-
-hr {
-    border: 0;
-    border-top: 1px solid #1a2016;
-    border-bottom: 1px solid var(--vgui-light);
-    margin: 15px 0;
-}
-
-/* Push buttons inside content */
-.action-button {
-    background-color: var(--vgui-medium);
-    color: var(--vgui-text);
-    padding: 8px 12px;
-    font-family: Tahoma, sans-serif;
+.main-header h1 {
+    margin: 0;
+    font-size: 38px;
+    color: var(--text-bright);
     font-weight: bold;
-    border-top: 2px solid var(--vgui-light);
-    border-left: 2px solid var(--vgui-light);
-    border-bottom: 2px solid var(--vgui-dark);
-    border-right: 2px solid var(--vgui-dark);
-    cursor: pointer;
+    letter-spacing: 1px;
 }
 
-.action-button:active {
-    border-top: 2px solid var(--vgui-dark);
-    border-left: 2px solid var(--vgui-dark);
-    border-bottom: 2px solid var(--vgui-light);
-    border-right: 2px solid var(--vgui-light);
+.main-header p {
+    margin: 10px 0 0 0;
+    font-size: 16px;
+    color: var(--text-main);
 }
 
-.vgui-footer {
-    padding: 10px;
-    text-align: right;
-    font-size: 11px;
-    color: var(--vgui-text);
+.highlight {
+    color: var(--highlight);
+}
+
+/* Navigation Menu */
+.main-nav {
+    display: flex;
+    background-color: #21271b;
+    border-bottom: 2px solid var(--panel-border);
+}
+
+.main-nav a {
+    flex: 1;
+    text-align: center;
+    padding: 14px 20px;
+    color: var(--text-main);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+    border-right: 1px solid #384030;
+    transition: background-color 0.1s;
+}
+
+.main-nav a:last-child {
+    border-right: none;
+}
+
+.main-nav a:hover {
+    background-color: #384030;
+    color: var(--text-bright);
+}
+
+.main-nav a.active {
+    background-color: var(--panel-color);
+    color: var(--highlight);
+    border-bottom: 3px solid var(--highlight);
+}
+
+/* Content Area */
+.content-container {
+    padding: 30px;
+}
+
+h2 {
+    color: var(--highlight);
+    border-bottom: 1px solid #758461;
+    padding-bottom: 8px;
+    margin-top: 0;
+}
+
+.intro-box {
+    font-size: 15px;
+    background-color: #384030;
+    padding: 20px 25px;
+    border: 1px solid var(--panel-border);
+}
+
+/* Footer */
+footer {
+    background-color: #21271b;
+    color: #758461;
+    text-align: center;
+    padding: 15px;
+    font-size: 12px;
+    border-top: 1px solid var(--panel-border);
 }
