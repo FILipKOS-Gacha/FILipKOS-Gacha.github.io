@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hammer Editor 2003 - Custom Build</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="vgui-window">
+        <!-- Window Title Bar -->
+        <div class="vgui-titlebar">
+            <span>Half-Life 2 2003 Leak - Custom Hammer Build</span>
+            <div class="vgui-controls">
+                <button class="sound-btn disabled-btn">_</button>
+                <button class="sound-btn disabled-btn">□</button>
+                <button class="sound-btn disabled-btn">X</button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="vgui-nav">
+            <a href="index.html" class="sound-btn active">Index</a>
+            <a href="updates.html" class="sound-btn">Updates</a>
+            <a href="download.html" class="sound-btn">Download</a>
+            <a href="credits.html" class="sound-btn">Credits</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="vgui-content">
+            <div class="vgui-panel header-panel">
+                <h1>Welcome to the 2003 Editor Project</h1>
+                <p>
+                    This is the central hub for the upcoming custom build of the leaked Hammer Editor, specifically stabilized and tailored for the legendary 2003 leaked build of Half-Life 2 (WC Mappack / Anon Leak). 
+                </p>
+            </div>
+
+            <div class="vgui-layout">
+                <div class="vgui-panel main-col">
+                    <h2>Current Status</h2>
+                    <p>
+                        Our goal is to create a functioning mapping environment that preserves the historical accuracy of the 2003 Source Engine tools, whilst fixing the most notorious crash-to-desktop (CTD) bugs that plagued the original leak.
+                    </p>
+                    <hr>
+                    <h3>Planned Features:</h3>
+                    <ul>
+                        <li>Fixed entity properties crashes.</li>
+                        <li>Restored missing 2003 FGD definitions.</li>
+                        <li>Stability improvements for massive WC Mappack VMFs.</li>
+                        <li>Properly compiling BSPs directly to the leaked build formats.</li>
+                    </ul>
+                </div>
+
+                <div class="vgui-panel side-col">
+                    <h2>Latest News</h2>
+                    <p><strong>Feb 2026:</strong> Initial site launched. Setting up repository and compiling final beta candidate.</p>
+                    <hr>
+                    <p><strong>Dec 2025:</strong> Successfully compiled test map using fixed VBSP.</p>
+                    
+                    <button style="margin-top: 15px; width: 100%;" class="sound-btn action-button" onclick="alert('Join our community to report bugs!')">Report a Bug</button>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="vgui-footer">
+            Build date: Early 2003 Engine • Powered by GoldSource / VGUI2 web aesthetic
+        </footer>
+    </div>
+
+    <script>
+        // Setup the sound
+        const buttonSound = new Audio('sounds/launch_upmenu1.wav');
+        buttonSound.volume = 0.5;
+
+        // Apply sound effect to everything with the "sound-btn" class
+        document.querySelectorAll('.sound-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Rewind sound and play it
+                buttonSound.currentTime = 0;
+                buttonSound.play().catch(err => {
+                    console.log("Audio play blocked until user interaction.");
+                });
+
+                // If the clicked element is an anchor link to another page
+                if (this.tagName.toLowerCase() === 'a' && this.href) {
+                    const isHashLink = this.getAttribute('href').startsWith('#');
+                    
+                    if (!isHashLink && this.target !== "_blank") {
+                        e.preventDefault(); // Stop instant navigation
+                        const targetUrl = this.href;
+                        
+                        // Wait 200ms to allow the audio "click" to actually be heard, 
+                        // imitating a classic engine menu load-pause, then change page.
+                        setTimeout(() => {
+                            window.location.href = targetUrl;
+                        }, 200); 
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
