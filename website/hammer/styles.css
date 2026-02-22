@@ -124,7 +124,7 @@ footer {
 .hover-name {
     color: var(--text-bright);
     text-decoration: underline dotted var(--panel-border);
-    cursor: help; /* Changes mouse to a question mark cursor to indicate a tooltip */
+    cursor: help;
     font-weight: bold;
 }
 
@@ -137,7 +137,7 @@ footer {
 
 .credit-link:hover {
     color: var(--text-bright);
-    text-shadow: 0px 0px 5px var(--highlight); /* Gives it a glowing effect when hovered */
+    text-shadow: 0px 0px 5px var(--highlight);
     text-decoration: underline;
 }
 
