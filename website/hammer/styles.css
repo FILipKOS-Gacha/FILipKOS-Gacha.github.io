@@ -161,3 +161,61 @@ footer {
     display: block;
     margin: 0 auto 15px auto;
 }
+
+/* Update / Accordion Styling */
+.update-block {
+    margin-top: 15px;
+    background-color: #2e3626;
+    border: 1px solid var(--panel-border);
+}
+
+.update-header {
+    background-color: #21271b;
+    color: var(--highlight);
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 15px;
+    cursor: pointer;
+    list-style: none; /* Hides default triangle in most browsers */
+    user-select: none;
+    border-bottom: 1px solid var(--bg-dark);
+}
+
+/* Hide default triangle in Webkit (Chrome/Edge/Safari) */
+.update-header::-webkit-details-marker {
+    display: none;
+}
+
+.update-header:hover {
+    background-color: #384030;
+    color: var(--text-bright);
+}
+
+.update-header::before {
+    content: "[+] ";
+    color: var(--text-main);
+    font-family: monospace;
+    font-weight: normal;
+    margin-right: 5px;
+}
+
+details[open] > .update-header::before {
+    content: "[-] ";
+}
+
+details:not([open]) .update-header {
+    border-bottom: none;
+}
+
+.update-content {
+    padding: 15px 25px 5px 15px;
+}
+
+.update-content ul {
+    margin-top: 0;
+}
+
+.update-content ul li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}

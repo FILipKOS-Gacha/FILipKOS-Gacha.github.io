@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worldcraft++ - Updates</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="page-wrapper">
+        
+        <header class="main-header">
+            <div class="header-content" style="text-align: center;">
+                <img src="logo.png" alt="Worldcraft++" style="width: 100%; max-width: 450px; height: auto; display: block; margin: 0 auto 15px auto;">
+                <p>A community-stabilized map editor for the Half-Life 2 Leak.</p>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <a href="index.html" class="sound-btn">Home</a>
+            <a href="updates.html" class="sound-btn active">Updates</a>
+            <a href="download.html" class="sound-btn">Download</a>
+            <a href="credits.html" class="sound-btn">Credits</a>
+        </nav>
+
+        <main class="content-container">
+            <section class="intro-box">
+                <h2>Changelog & Updates</h2>
+                
+                <details class="update-block sound-btn" open>
+                    <summary class="update-header">Update - 19/2/26</summary>
+                    <div class="update-content">
+                        <ul class="feature-list">
+                            <li>Added faster loading and made sure that the leaked Hammer will keep the previously opened .vmf file in memory.</li>
+                            <li>Fixed Lazy Evaluation in Texture Browser, which caused a loop due to textures not being loaded into memory, causing Leaked Hammer to become unresponsive.</li>
+                            <li>Improved Mouse Wheel Speed, allowing the user to move around the uncompiled map faster than having to hold W key. The user can also manipulate the speed of the camera by holding Shift and using the scroll.</li>
+                            <li>Added new Hotkeys:
+                                <ul>
+                                    <li><strong>H</strong> - Quick Hide Selection</li>
+                                    <li><strong>U</strong> - Unhide all</li>
+                                    <li><strong>ESC</strong> - Quick Deselect</li>
+                                </ul>
+                            </li>
+                            <li>Improved auto-visgroup.</li>
+                            <li>Added a 2003-looking Hammer model browser.</li>
+                            <li>Improved Grid Navigation inspired by J.A.C.K and Hammer++. (Suggestion made by soup2.0)</li>
+                            <li>Added a secret easter egg.</li>
+                            <li>Fixed a bug with Texture Scale Reset.</li>
+                            <li>Fixed Grid Drift, where if the user would place an entity (e.g., at 2048.55) and saved, Hammer would write it as 2048.6 and make the entity off-grid. (Which was a risk of creating leaks)</li>
+                            <li>Re-fixed an error about uncapped FPS; the previous fix used Sleep(30), which was at first helpful. DWM saw those as requests and slowed Hammer back to 30 fps.</li>
+                            <li>Fixed the infamous Vertex Snap / Invalid Solid bug.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="update-block sound-btn">
+                    <summary class="update-header">Update - 8/2/26</summary>
+                    <div class="update-content">
+                        <ul class="feature-list">
+                            <li>Removed .map and .RMF support.</li>
+                            <li>Rewrote CWorldcraft::Run to remove the hard-coded 60 FPS sleep limit, the main loop now prioritizes message processing and rendering immediately when the application is active, providing minimum input latency and maximum smoothness.</li>
+                            <li>Implemented a thread sleep (10ms) trigger when the application is inactive or minimized to prevent unnecessary CPU consumption while multitasking.</li>
+                            <li>Added timeBeginPeriod(1) to InitInstance, this forces the Windows timer resolution to 1ms, eliminating micro-stutters and jitter in the 3D viewport animations previously caused by low-precision system timing.</li>
+                            <li>Removed hardcoded render distance caps in CMapView3D. View frustum Far Z is now initialized to 300,000 units.</li>
+                            <li>Optimized hotkey logic for view distance control to support large-scale adjustments.</li>
+                            <li>Fixed CMapStudioModel render distance not synchronizing with the active camera frustum settings.</li>
+                            <li>Rewrote CMapView2D::DrawGrid to support adaptive spacing. Grid lines now double in interval (e.g., 64 -> 128) as zoom decreases, ensuring line spacing never falls below 4 pixels.</li>
+                            <li>Fixed GDI rendering issue where the grid would fail to render (black screen) at low zoom factors due to sub-pixel grid spacing.</li>
+                            <li>Fixed a bug where pasted brush-work wouldn't paste on the location chosen by the user and instead, appear far away from the chosen place.</li>
+                            <li>Made sure that the camera movement in editor doesn't stutter when having high FPS or using scroll and W key for fast moving.</li>
+                            <li>Added a function inspired by Hammer++ to hide Nodraw textures to make them stop rendering in Hammer Editor under the F5 key. <em>(does not function, possibly requires a community fix in future.)</em></li>
+                            <li>Increased Ray Length from 4096/8192 units to 10,000 units.</li>
+                            <li>Forced map compiler to inject -red2black flag into VRAD parameters.</li>
+                            <li>Added memory leak detection.</li>
+                            <li>Fixed Squashed Textures in Hammer Editor's Texture Browser.</li>
+                            <li>Upgraded 2D Orientation Arrows which is based on 2007 Hammer, it will allow mappers to see if info_player_start or prop_static are correctly placed by showing yellow line in Top (2D) View.</li>
+                            <li>Added Auto-VisGroups and made sure that they automatically make categories.</li>
+                        </ul>
+                    </div>
+                </details>
+
+            </section>
+        </main>
+        
+        <footer>
+            <p>Worldcraft++ is a custom build of Leaked Hammer Editor created by FILipKOS. • Not affiliated with Valve Software or Hammer++!</p>
+        </footer>
+        
+    </div>
+
+    <script>
+        // Setup the sound
+        const buttonSound = new Audio('sounds/launch_upmenu1.wav');
+        buttonSound.volume = 0.5;
+
+        document.querySelectorAll('.sound-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Rewind and play sound
+                buttonSound.currentTime = 0;
+                buttonSound.play().catch(err => { console.log("Audio blocked until interaction."); });
+
+                if (this.tagName.toLowerCase() === 'a' && this.href) {
+                    const isHashLink = this.getAttribute('href').startsWith('#');
+                    if (!isHashLink && this.target !== "_blank") {
+                        e.preventDefault(); 
+                        const targetUrl = this.href;
+                        setTimeout(() => {
+                            window.location.href = targetUrl;
+                        }, 200); 
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
