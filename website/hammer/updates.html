@@ -58,7 +58,7 @@
                     <summary class="update-header">Update - 8/2/26</summary>
                     <div class="update-content">
                         <ul class="feature-list">
-                            <li>Removed .map and .RMF support.</li>
+                            <li>Re-added .map and .RMF support.</li>
                             <li>Rewrote CWorldcraft::Run to remove the hard-coded 60 FPS sleep limit, the main loop now prioritizes message processing and rendering immediately when the application is active, providing minimum input latency and maximum smoothness.</li>
                             <li>Implemented a thread sleep (10ms) trigger when the application is inactive or minimized to prevent unnecessary CPU consumption while multitasking.</li>
                             <li>Added timeBeginPeriod(1) to InitInstance, this forces the Windows timer resolution to 1ms, eliminating micro-stutters and jitter in the 3D viewport animations previously caused by low-precision system timing.</li>
