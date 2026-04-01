@@ -10,6 +10,7 @@
 
     <div class="page-wrapper">
         
+        <!-- Header Banner -->
         <header class="main-header">
             <div class="header-content" style="text-align: center;">
                 <img src="logo.png" alt="Worldcraft++" style="width: 100%; max-width: 450px; height: auto; display: block; margin: 0 auto 15px auto;">
@@ -17,6 +18,7 @@
             </div>
         </header>
 
+        <!-- Navigation Bar -->
         <nav class="main-nav">
             <a href="index.html" class="sound-btn">Home</a>
             <a href="updates.html" class="sound-btn active">Updates</a>
@@ -24,11 +26,55 @@
             <a href="credits.html" class="sound-btn">Credits</a>
         </nav>
 
+        <!-- Main Content Area -->
         <main class="content-container">
             <section class="intro-box">
                 <h2>Changelog & Updates</h2>
-                
-				<details class="update-block sound-btn" open>
+
+                <!-- LATEST ANNOUNCEMENT -->
+                <details class="update-block sound-btn" open>
+                    <summary class="update-header" style="color: #ffaa00;">Announcement - 1/4/26</summary>
+                    <div class="update-content">
+                        <p style="margin-top: 5px; line-height: 1.6;">Hello guys, Filip here.</p>
+                        <p style="line-height: 1.6;">I'm officially announcing that, possibly in June, there will be a public Beta-Testing of Worldcraft++! However, I can't determinate on which day the testing will start. Worldcraft++ is still being upgraded, fixed etc, etc.</p>
+                        <p style="line-height: 1.6;">After beta tests will end, I will gather feedback, and it will be used for actual release of Worldcraft++.</p>
+                        <p style="line-height: 1.6; margin-bottom: 10px;">Thank you for reading.</p>
+                    </div>
+                </details>
+
+                <!-- NEW UPDATE: 4/3/26 to 31/3/26 -->
+                <details class="update-block sound-btn">
+                    <summary class="update-header">Update - 4/3/26 to 31/3/26</summary>
+                    <div class="update-content">
+                        <ul class="feature-list">
+                            <li>Fixed a bug causing an Invalid Texture Extents happening when rotated brush has an extremely small/broken texture scale. This happens when importing or decompiling maps.</li>
+                            <li>Rewrote slightly <code>void CMapDoc::UpdateAutoVisGroups(void)</code> function.</li>
+                            <li>Fixed displacements using lots of memory (Fix inspired by Hammer++).</li>
+                            <li>Fixed undo/redo not updating models. <strong>(REVERTED.)</strong></li>
+                            <li>Backported 3D Radius Spheres from 2013 Hammer, that appears when using entities like: light, ambient_generic, etc.</li>
+                            <li>Fixed "The SmartEdit Enter Key Trap" which existed since 1998!</li>
+                            <li>Fixed 2D view bugging out and "stop working" after zooming out due to hard-coded limit.</li>
+                            <li>Improved 3D selection, making it faster and comfortable to use. <strong>(REVERTED.)</strong></li>
+                            <li>Cleaned up some stuff in code.</li>
+                            <li>Fixed an bug where custom mod directory in Leaked Hammer would not display user-made models, sounds and textures.</li>
+                            <li>Removed CSG "requirement" due to Valve already merging VBSP and VCSG into one thing.</li>
+                            <li>User can now safely cancel the map compiler without Leaked Hammer crashing or bugging out + added safety check in <code>void CProcessWnd::Append(CString str)</code> function.</li>
+                            <li>Fixed strncpy Buffer Overrun in Model Browser.</li>
+                            <li>Added red text in I/O.</li>
+                            <li>Added Sound Browser.</li>
+                            <li>Worldcraft++ now has it's own registry while still being in LeakNet directory in Registry Editor.</li>
+                            <li>Finished function responsible for creating brushes in 3D View.</li>
+                            <li>Fixed memory leak in GDI Handle which would cause "Black UI Bug".</li>
+                            <li>Fixed LEAKLEAK commment in <code>void CMapEntity::RemoveHelpers(bool bRemoveSolids)</code>, responsible for handling entity properties (like in prop_static model or entity class). Worldcraft++ no more "secretly" abandons the old models into RAM and wastes gigabytes of users RAM.</li>
+                            <li>Fixed Invalid Solid bug.</li>
+                            <li>Fixed CString memory corruption crash in OP_entity.cpp.</li>
+                            <li>Fixed weird over-lighted white textures happening.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <!-- OLD ANNOUNCEMENT: 12/3/26 (Now closed by default) -->
+                <details class="update-block sound-btn">
                     <summary class="update-header" style="color: #ffaa00;">Announcement - 12/3/26</summary>
                     <div class="update-content">
                         <p style="margin-top: 5px; line-height: 1.6;">Hello everybody, Filip here.</p>
@@ -36,7 +82,8 @@
                         <p style="line-height: 1.6; margin-bottom: 10px;">Thank you for reading.</p>
                     </div>
                 </details>
-				
+                
+                <!-- PREVIOUS UPDATE: 19/2/26 -->
                 <details class="update-block sound-btn">
                     <summary class="update-header">Update - 19/2/26</summary>
                     <div class="update-content">
@@ -63,11 +110,12 @@
                     </div>
                 </details>
 
+                <!-- OLD UPDATE: 8/2/26 -->
                 <details class="update-block sound-btn">
                     <summary class="update-header">Update - 8/2/26</summary>
                     <div class="update-content">
                         <ul class="feature-list">
-                            <li>Re-added .map and .RMF support.</li>
+                            <li>Removed .map and .RMF support.</li>
                             <li>Rewrote CWorldcraft::Run to remove the hard-coded 60 FPS sleep limit, the main loop now prioritizes message processing and rendering immediately when the application is active, providing minimum input latency and maximum smoothness.</li>
                             <li>Implemented a thread sleep (10ms) trigger when the application is inactive or minimized to prevent unnecessary CPU consumption while multitasking.</li>
                             <li>Added timeBeginPeriod(1) to InitInstance, this forces the Windows timer resolution to 1ms, eliminating micro-stutters and jitter in the 3D viewport animations previously caused by low-precision system timing.</li>
@@ -99,13 +147,12 @@
     </div>
 
     <script>
-        // Setup the sound
+        // Setup the classic Half-Life UI sound
         const buttonSound = new Audio('sounds/launch_upmenu1.wav');
         buttonSound.volume = 0.5;
 
         document.querySelectorAll('.sound-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
-                // Rewind and play sound
                 buttonSound.currentTime = 0;
                 buttonSound.play().catch(err => { console.log("Audio blocked until interaction."); });
 
