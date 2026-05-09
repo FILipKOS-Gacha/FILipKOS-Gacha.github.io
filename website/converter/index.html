@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Source Engine Audio Converter | FILipKOS</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            background-image: linear-gradient(#222 1px, transparent 1px), linear-gradient(90deg, #222 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #d8d8d8;
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .tool-window {
+            background: #2b2b2b;
+            border-bottom: 2px solid #0f0f0f;
+            border-right: 2px solid #0f0f0f;
+            border-top: 1px solid #4a4a4a;
+            border-left: 1px solid #4a4a4a;
+            width: 480px;
+            box-shadow: 8px 8px 15px rgba(0,0,0,0.8);
+        }
+
+        .title-bar {
+            background: #f39c12; /* Source Engine Orange */
+            color: #111;
+            padding: 5px 10px;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            user-select: none;
+            border-bottom: 1px solid #111;
+        }
+
+        .title-bar-btns span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #111;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .author-tag {
+            text-align: right;
+            font-size: 11px;
+            color: #777;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .author-tag span {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        fieldset {
+            border: 1px solid #555;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0;
+        }
+
+        legend {
+            font-size: 12px;
+            color: #f39c12;
+            padding: 0 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+        }
+        
+        .form-row:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+
+        input[type="file"], select {
+            width: 100%;
+            background: #1e1e1e;
+            color: #eee;
+            border: 1px solid #111;
+            padding: 8px;
+            font-size: 12px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #444;
+            border-right: 1px solid #444;
+            font-family: inherit;
+        }
+
+        .hint {
+            font-size: 10px;
+            color: #888;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        button {
+            background: #3a3a3a;
+            color: #fff;
+            border-top: 1px solid #666;
+            border-left: 1px solid #666;
+            border-bottom: 2px solid #0f0f0f;
+            border-right: 2px solid #0f0f0f;
+            padding: 12px;
+            width: 100%;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.1s;
+        }
+
+        button:hover {
+            background: #4a4a4a;
+        }
+
+        button:active {
+            border-top: 2px solid #0f0f0f;
+            border-left: 2px solid #0f0f0f;
+            border-bottom: 1px solid #666;
+            border-right: 1px solid #666;
+            background: #2a2a2a;
+        }
+
+        button:disabled {
+            background: #222;
+            color: #555;
+            cursor: not-allowed;
+            border: 1px solid #111;
+        }
+
+        .console-box {
+            background: #0a0a0a;
+            border: 1px inset #444;
+            height: 110px;
+            margin-top: 20px;
+            padding: 10px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 11px;
+            color: #0f0;
+            overflow-y: auto;
+            word-wrap: break-word;
+        }
+        
+        .log-error { color: #ff3333; }
+        .log-info { color: #d3d3d3; }
+        .log-success { color: #00ff00; }
+    </style>
+</head>
+<body>
+
+    <div class="tool-window">
+        <div class="title-bar">
+            <div>SourceAudio_Forge.exe</div>
+            <div class="title-bar-btns"><span></span><span></span></div>
+        </div>
+        
+        <div class="content">
+            <div class="author-tag">Tool compiled by <span>FILipKOS</span></div>
+
+            <fieldset>
+                <legend>Target Output Configuration</legend>
+                
+                <div class="form-row">
+                    <label for="audioInput">Source File (MP3, WAV, OGG):</label>
+                    <input type="file" id="audioInput" accept="audio/*">
+                </div>
+
+                <div class="form-row">
+                    <label for="channelMode">Channel Mode:</label>
+                    <select id="channelMode">
+                        <option value="1">Mono (1-Channel) - Required for 3D Positional Audio</option>
+                        <option value="2">Stereo (2-Channel) - Music & UI Audio ONLY</option>
+                    </select>
+                    <div class="hint">Warning: If you use Stereo for sound effects inside maps, the sound will play globally into the player's head and won't have distance attenuation.</div>
+                </div>
+            </fieldset>
+
+            <button id="convertBtn">Compile to 16-bit 44.1kHz WAV</button>
+
+            <div class="console-box" id="consoleOutput">
+                <div class="log-info">> Awaiting input...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const logEl = document.getElementById('consoleOutput');
+        const btn = document.getElementById('convertBtn');
+        const fileInput = document.getElementById('audioInput');
+        const channelSelect = document.getElementById('channelMode');
+
+        function addLog(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = 'log-' + type;
+            div.textContent = `> ${msg}`;
+            logEl.appendChild(div);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        btn.addEventListener('click', async () => {
+            if (!fileInput.files.length) {
+                addLog("ERR: No audio file selected.", "error");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const numChannels = parseInt(channelSelect.value, 10);
+            const targetSampleRate = 44100;
+
+            btn.disabled = true;
+            addLog(`Reading buffer from: ${file.name}...`);
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                addLog("Decoding audio data (Native Browser API)...");
+
+                // Decode whatever format user throws at it
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+                addLog(`Resampling stream to ${targetSampleRate}Hz (${numChannels === 1 ? 'Mono' : 'Stereo'})...`);
+                
+                // OfflineContext handles flawless resampling and channel down/up mixing
+                const offlineCtx = new OfflineAudioContext(
+                    numChannels, 
+                    Math.ceil(audioBuffer.duration * targetSampleRate), 
+                    targetSampleRate
+                );
+
+                const source = offlineCtx.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(offlineCtx.destination);
+                source.start(0);
+
+                const renderedBuffer = await offlineCtx.startRendering();
+                
+                addLog("Writing pure 16-bit PCM WAV headers (Stripping BWF metadata)...");
+                const wavBlob = encodeToWav(renderedBuffer, numChannels, targetSampleRate);
+
+                addLog("Compile successful. Initiating file drop...", "success");
+
+                // Download execution
+                const url = URL.createObjectURL(wavBlob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                
+                let baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                a.download = `${baseName}_source.wav`;
+                
+                document.body.appendChild(a);
+                a.click();
+                
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    btn.disabled = false;
+                }, 100);
+
+            } catch (err) {
+                addLog("FATAL ERROR: " + err.message, "error");
+                btn.disabled = false;
+            }
+        });
+
+        // Generates strict RIFF chunk for Source compatibility
+        function encodeToWav(buffer, numChannels, sampleRate) {
+            let interleaved;
+            if (numChannels === 2) {
+                interleaved = interleaveChannels(buffer.getChannelData(0), buffer.getChannelData(1));
+            } else {
+                interleaved = buffer.getChannelData(0);
+            }
+
+            const bitDepth = 16;
+            const bytesPerSample = bitDepth / 8;
+            const blockAlign = numChannels * bytesPerSample;
+            
+            const wavBuffer = new ArrayBuffer(44 + interleaved.length * bytesPerSample);
+            const view = new DataView(wavBuffer);
+
+            const writeStr = (offset, str) => {
+                for (let i = 0; i < str.length; i++) {
+                    view.setUint8(offset + i, str.charCodeAt(i));
+                }
+            };
+
+            writeStr(0, 'RIFF');
+            view.setUint32(4, 36 + interleaved.length * bytesPerSample, true);
+            writeStr(8, 'WAVE');
+            
+            writeStr(12, 'fmt ');
+            view.setUint32(16, 16, true); 
+            view.setUint16(20, 1, true); 
+            view.setUint16(22, numChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * blockAlign, true);
+            view.setUint16(32, blockAlign, true);
+            view.setUint16(34, bitDepth, true);
+            
+            writeStr(36, 'data');
+            view.setUint32(40, interleaved.length * bytesPerSample, true);
+
+            // PCM float32 to int16 mapping
+            let offset = 44;
+            for (let i = 0; i < interleaved.length; i++, offset += 2) {
+                let s = Math.max(-1, Math.min(1, interleaved[i]));
+                view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+            }
+
+            return new Blob([view], { type: 'audio/wav' });
+        }
+
+        function interleaveChannels(left, right) {
+            const length = left.length + right.length;
+            const result = new Float32Array(length);
+            let index = 0, inputIndex = 0;
+            while (index < length) {
+                result[index++] = left[inputIndex];
+                result[index++] = right[inputIndex];
+                inputIndex++;
+            }
+            return result;
+        }
+    </script>
+</body>
+</html>
