@@ -330,8 +330,7 @@
                 a.href = url;
                 
                 let baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-                let suffix = profileSelect.value === 'source' ? 'source' : 'goldsrc';
-                a.download = `${baseName}_${suffix}.wav`;
+                a.download = `${baseName}.wav`;
                 
                 document.body.appendChild(a);
                 a.click();
