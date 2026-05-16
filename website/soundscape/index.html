@@ -27,8 +27,8 @@
             border-right: 2px solid #0f0f0f;
             border-top: 1px solid #4a4a4a;
             border-left: 1px solid #4a4a4a;
-            width: 1000px;
-            height: 800px;
+            width: 1050px;
+            height: 850px;
             display: flex;
             flex-direction: column;
             box-shadow: 12px 12px 20px rgba(0,0,0,0.8);
@@ -124,6 +124,12 @@
             overflow-x: auto;
             margin-bottom: 15px;
             line-height: 1.4;
+        }
+        
+        /* Make it visually obvious the text box can be edited now */
+        textarea.terminal:focus {
+            background: #0d1a0d; 
+            border: 1px solid #4CAF50;
         }
 
         button {
@@ -245,8 +251,13 @@
                     </div>
                 </fieldset>
 
-                <label style="color: #f39c12;">Output Preview:</label>
-                <textarea id="previewText" class="terminal" readonly></textarea>
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4px;">
+                    <label style="color: #f39c12; margin-bottom: 0;">Output Preview (Fully Editable):</label>
+                    <span style="font-size: 9px; color: #888;">Note: Changing left UI resets manual edits</span>
+                </div>
+                
+                <!-- Removed 'readonly' so modders can tweak values -->
+                <textarea id="previewText" class="terminal"></textarea>
 
                 <div class="flex-row" style="margin-bottom:0;">
                     <button style="flex: 1;" onclick="copyToClipboard()">Copy to Clipboard</button>
@@ -263,10 +274,10 @@
             engine: 'retail',
             dsp: '1',
             loops: [
-                { wave: 'ambient/wind/wind_moan2.wav', vol: '0.8', pitch: '100', pos: '0', lvl: 'SNDLVL_NORM' }
+                { wave: 'ambient/wind/wind_moan2.wav', vol: '0.8', pitch: '100', pos: '0', lvl: 'NORM' }
             ],
             randoms: [
-                { waves: 'ambient/nature/bird1.wav\nambient/nature/bird2.wav', tMin: '2.0', tMax: '6.5', vMin: '0.4', vMax: '0.8', pMin: '95', pMax: '105', pos: '0', lvl: 'SNDLVL_NORM' }
+                { waves: 'ambient/nature/bird1.wav\nambient/nature/bird2.wav', tMin: '2.0', tMax: '6.5', vMin: '0.4', vMax: '0.8', pMin: '95', pMax: '105', pos: '0', lvl: 'NORM' }
             ]
         };
 
@@ -277,11 +288,11 @@
         function updateRand(i, key, val) { state.randoms[i][key] = val; renderPreview(); }
 
         function addLoop() {
-            state.loops.unshift({ wave: '', vol: '1.0', pitch: '100', pos: '0', lvl: 'SNDLVL_NORM' });
+            state.loops.unshift({ wave: '', vol: '1.0', pitch: '100', pos: '0', lvl: 'NORM' });
             renderDOM(); renderPreview();
         }
         function addRand() {
-            state.randoms.unshift({ waves: '', tMin: '1.0', tMax: '3.0', vMin: '0.5', vMax: '1.0', pMin: '100', pMax: '100', pos: '0', lvl: 'SNDLVL_NORM' });
+            state.randoms.unshift({ waves: '', tMin: '1.0', tMax: '3.0', vMin: '0.5', vMax: '1.0', pMin: '100', pMax: '100', pos: '0', lvl: 'NORM' });
             renderDOM(); renderPreview();
         }
         function removeLoop(i) { state.loops.splice(i, 1); renderDOM(); renderPreview(); }
@@ -304,17 +315,19 @@
                         <div class="flex-col">
                             <label>3D Target Pos</label>
                             <select oninput="updateLoop(${i}, 'pos', this.value)">
-                                <option value="0" ${L.pos==='0'?'selected':''}>0 - Local</option>
+                                <option value="0" ${L.pos==='0'?'selected':''}>0 - Local (Player Head)</option>
                                 <option value="1" ${L.pos==='1'?'selected':''}>1 - Target Entity 1</option>
                                 <option value="2" ${L.pos==='2'?'selected':''}>2 - Target Entity 2</option>
                             </select>
                         </div>
                         <div class="flex-col">
-                            <label>Sound Level (Radius)</label>
+                            <label>Sound Radius</label>
                             <select oninput="updateLoop(${i}, 'lvl', this.value)">
-                                <option value="SNDLVL_NORM" ${L.lvl==='SNDLVL_NORM'?'selected':''}>SNDLVL_NORM</option>
-                                <option value="SNDLVL_NONE" ${L.lvl==='SNDLVL_NONE'?'selected':''}>SNDLVL_NONE (Infinite)</option>
-                                <option value="SNDLVL_140dB" ${L.lvl==='SNDLVL_140dB'?'selected':''}>SNDLVL_140dB (Massive)</option>
+                                <option value="NONE" ${L.lvl==='NONE'?'selected':''}>Infinite (0dB)</option>
+                                <option value="NORM" ${L.lvl==='NORM'?'selected':''}>Normal (75dB)</option>
+                                <option value="IDLE" ${L.lvl==='IDLE'?'selected':''}>Idle / Quiet (60dB)</option>
+                                <option value="STATIC" ${L.lvl==='STATIC'?'selected':''}>Static (66dB)</option>
+                                <option value="GUNFIRE" ${L.lvl==='GUNFIRE'?'selected':''}>Gunfire (140dB)</option>
                             </select>
                         </div>
                     </div>
@@ -343,20 +356,48 @@
                         <div class="flex-col">
                             <label>3D Target Pos</label>
                             <select oninput="updateRand(${i}, 'pos', this.value)">
-                                <option value="0" ${R.pos==='0'?'selected':''}>0 - Local</option>
+                                <option value="0" ${R.pos==='0'?'selected':''}>0 - Local (Player)</option>
                                 <option value="1" ${R.pos==='1'?'selected':''}>1 - Target Entity 1</option>
                             </select>
                         </div>
                         <div class="flex-col">
-                            <label>Sound Level (Radius)</label>
+                            <label>Sound Radius</label>
                             <select oninput="updateRand(${i}, 'lvl', this.value)">
-                                <option value="SNDLVL_NORM" ${R.lvl==='SNDLVL_NORM'?'selected':''}>SNDLVL_NORM</option>
-                                <option value="SNDLVL_NONE" ${R.lvl==='SNDLVL_NONE'?'selected':''}>SNDLVL_NONE (Infinite)</option>
+                                <option value="NONE" ${R.lvl==='NONE'?'selected':''}>Infinite (0dB)</option>
+                                <option value="NORM" ${R.lvl==='NORM'?'selected':''}>Normal (75dB)</option>
+                                <option value="IDLE" ${R.lvl==='IDLE'?'selected':''}>Idle / Quiet (60dB)</option>
+                                <option value="STATIC" ${R.lvl==='STATIC'?'selected':''}>Static (66dB)</option>
+                                <option value="GUNFIRE" ${R.lvl==='GUNFIRE'?'selected':''}>Gunfire (140dB)</option>
                             </select>
                         </div>
                     </div>
                 </fieldset>
             `).join('');
+        }
+
+        // Translates abstract drop-down level into specific syntax required by selected Engine
+        function compileRadiusBlock(val) {
+            if (state.engine === 'leak') {
+                // Values mapped directly from Valve's 2003 internal attenuation logic chart
+                switch(val) {
+                    case 'NONE': return '"attenuation"\t"0"';
+                    case 'NORM': return '"attenuation"\t"0.8"';
+                    case 'IDLE': return '"attenuation"\t"2.0"';
+                    case 'STATIC': return '"attenuation"\t"1.25"';
+                    case 'GUNFIRE': return '"attenuation"\t"0.27"';
+                    default: return '"attenuation"\t"0.8"';
+                }
+            } else {
+                // Standard Retail Volume Distance syntax
+                switch(val) {
+                    case 'NONE': return '"soundlevel"\t"SNDLVL_NONE"';
+                    case 'NORM': return '"soundlevel"\t"SNDLVL_NORM"';
+                    case 'IDLE': return '"soundlevel"\t"SNDLVL_IDLE"';
+                    case 'STATIC': return '"soundlevel"\t"SNDLVL_STATIC"';
+                    case 'GUNFIRE': return '"soundlevel"\t"SNDLVL_GUNFIRE"';
+                    default: return '"soundlevel"\t"SNDLVL_NORM"';
+                }
+            }
         }
 
         function renderPreview() {
@@ -383,13 +424,7 @@
                 out += `\t\t"pitch"\t\t\t"${L.pitch}"\n`;
                 
                 if (L.pos !== '0') out += `\t\t"position"\t\t"${L.pos}"\n`;
-                
-                if (L.lvl !== 'SNDLVL_NORM' && state.engine !== 'retail') {
-                    out += `\t\t// "soundlevel" stripped for leak compat\n`;
-                } else if (L.lvl !== 'SNDLVL_NORM') {
-                    out += `\t\t"soundlevel"\t"${L.lvl}"\n`;
-                }
-                
+                out += `\t\t${compileRadiusBlock(L.lvl)}\n`;
                 out += `\t\t"wave"\t\t\t"${L.wave.trim()}"\n`;
                 out += `\t}\n`;
             });
@@ -406,12 +441,7 @@
                 else out += `\t\t"pitch"\t\t\t"${R.pMin}, ${R.pMax}"\n`;
 
                 if (R.pos !== '0') out += `\t\t"position"\t\t"${R.pos}"\n`;
-                
-                if (R.lvl !== 'SNDLVL_NORM' && state.engine !== 'retail') {
-                    out += `\t\t// "soundlevel" stripped for leak compat\n`;
-                } else if (R.lvl !== 'SNDLVL_NORM') {
-                    out += `\t\t"soundlevel"\t"${R.lvl}"\n`;
-                }
+                out += `\t\t${compileRadiusBlock(R.lvl)}\n`;
 
                 out += `\n\t\t"rndwave"\n\t\t{\n`;
                 lines.forEach(line => {
@@ -424,6 +454,7 @@
             document.getElementById('previewText').value = out;
         }
 
+        // Export now pulls whatever the user typed into the text box, including their manual edits
         function downloadTxt() {
             const text = document.getElementById('previewText').value;
             const blob = new Blob([text], { type: 'text/plain' });
