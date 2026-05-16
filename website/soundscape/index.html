@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnvSoundscape_Forge | FILipKOS</title>
+    <style>
+        * { box-sizing: border-box; }
+        
+        body {
+            background-color: #1a1a1a;
+            background-image: linear-gradient(#222 1px, transparent 1px), linear-gradient(90deg, #222 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #d8d8d8;
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .tool-window {
+            background: #2b2b2b;
+            border-bottom: 2px solid #0f0f0f;
+            border-right: 2px solid #0f0f0f;
+            border-top: 1px solid #4a4a4a;
+            border-left: 1px solid #4a4a4a;
+            width: 1000px;
+            height: 800px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 12px 12px 20px rgba(0,0,0,0.8);
+        }
+
+        .title-bar {
+            background: #f39c12; 
+            color: #111;
+            padding: 6px 12px;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            user-select: none;
+            border-bottom: 1px solid #111;
+        }
+
+        .main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .left-panel {
+            flex: 1.5;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 2px solid #111;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 20px;
+            background: #222;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #4a4a4a;
+        }
+
+        fieldset {
+            border: 1px solid #555;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #272727;
+        }
+
+        legend {
+            font-size: 12px;
+            color: #f39c12;
+            padding: 0 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .flex-row { display: flex; gap: 15px; margin-bottom: 10px; }
+        .flex-col { display: flex; flex-direction: column; flex: 1; }
+        .form-row { margin-bottom: 10px; }
+
+        label {
+            display: block;
+            font-size: 11px;
+            margin-bottom: 4px;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background: #1e1e1e;
+            color: #fff;
+            border: 1px solid #111;
+            border-bottom: 1px solid #4a4a4a;
+            border-right: 1px solid #4a4a4a;
+            padding: 7px;
+            font-size: 12px;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-bottom: 1px solid #f39c12;
+        }
+
+        textarea.terminal {
+            flex: 1;
+            background: #0a0a0a;
+            color: #4CAF50;
+            font-family: 'Consolas', 'Courier New', monospace;
+            resize: none;
+            border: 1px inset #444;
+            padding: 10px;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        button {
+            background: #3a3a3a;
+            color: #fff;
+            border-top: 1px solid #666;
+            border-left: 1px solid #666;
+            border-bottom: 2px solid #0f0f0f;
+            border-right: 2px solid #0f0f0f;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.1s;
+        }
+
+        button:hover { background: #4a4a4a; }
+        button:active {
+            border-top: 2px solid #0f0f0f;
+            border-left: 2px solid #0f0f0f;
+            border-bottom: 1px solid #666;
+            border-right: 1px solid #666;
+            background: #2a2a2a;
+        }
+
+        .btn-action { background: #274e13; color: #a2fca2; }
+        .btn-action:hover { background: #38761d; }
+
+        .del-btn {
+            background: #600;
+            padding: 2px 6px;
+            font-size: 10px;
+            float: right;
+            border: 1px solid #900;
+        }
+        .del-btn:hover { background: #900; }
+
+        .tool-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .author-tag {
+            text-align: right;
+            font-size: 11px;
+            color: #777;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .author-tag span { color: #f39c12; font-weight: bold; }
+
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; border-left: 1px solid #111; }
+        ::-webkit-scrollbar-thumb { background: #444; border: 1px solid #222; }
+        ::-webkit-scrollbar-thumb:hover { background: #f39c12; }
+    </style>
+</head>
+<body>
+
+    <div class="tool-window">
+        <div class="title-bar">
+            <div>EnvSoundscape_Forge.exe</div>
+        </div>
+        
+        <div class="main-layout">
+            <!-- Builders -->
+            <div class="left-panel">
+                <div class="tool-header">
+                    <button class="btn-action" onclick="addLoop()">+ Add Looping Emitter</button>
+                    <button class="btn-action" onclick="addRand()">+ Add Random Emitter</button>
+                </div>
+
+                <div id="loopsContainer"></div>
+                <div id="randomsContainer"></div>
+            </div>
+
+            <!-- Settings -->
+            <div class="right-panel">
+                <div class="author-tag">Written by <span>FILipKOS</span></div>
+
+                <fieldset>
+                    <legend>Export Target Settings</legend>
+                    <div class="form-row">
+                        <label>Soundscape Rule Name</label>
+                        <input type="text" id="cfg_name" value="mymap.outdoor" oninput="updateState('name', this.value)">
+                    </div>
+                    <div class="form-row">
+                        <label>Save As (.txt)</label>
+                        <input type="text" id="cfg_file" value="soundscapes_mymap.txt" oninput="updateState('filename', this.value)">
+                    </div>
+                    
+                    <div class="flex-row">
+                        <div class="flex-col">
+                            <label>DSP Room Preset</label>
+                            <select id="cfg_dsp" oninput="updateState('dsp', this.value)">
+                                <option value="0">0 - Disabled (Normal)</option>
+                                <option value="1" selected>1 - Auto / Default</option>
+                                <option value="4">4 - Generic Indoor</option>
+                                <option value="7">7 - Tunnel</option>
+                                <option value="11">11 - Cavern / Heavy Echo</option>
+                                <option value="14">14 - Underwater</option>
+                                <option value="20">20 - Concrete Room</option>
+                                <option value="24">24 - Outside</option>
+                                <option value="29">29 - Auditorium</option>
+                                <option value="33">33 - Open Courtyard</option>
+                                <option value="51">51 - Sewer</option>
+                                <option value="56">56 - Duct / Crawlspace</option>
+                            </select>
+                        </div>
+                        <div class="flex-col">
+                            <label>Target Engine</label>
+                            <select id="cfg_engine" oninput="updateState('engine', this.value)">
+                                <option value="retail">Source (Retail/Modern)</option>
+                                <option value="leak">HL2 Beta (2003 Leak)</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <label style="color: #f39c12;">Output Preview:</label>
+                <textarea id="previewText" class="terminal" readonly></textarea>
+
+                <div class="flex-row" style="margin-bottom:0;">
+                    <button style="flex: 1;" onclick="copyToClipboard()">Copy to Clipboard</button>
+                    <button class="btn-action" style="flex: 1;" onclick="downloadTxt()">Save .TXT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            name: 'mymap.outdoor',
+            filename: 'soundscapes_mymap.txt',
+            engine: 'retail',
+            dsp: '1',
+            loops: [
+                { wave: 'ambient/wind/wind_moan2.wav', vol: '0.8', pitch: '100', pos: '0', lvl: 'SNDLVL_NORM' }
+            ],
+            randoms: [
+                { waves: 'ambient/nature/bird1.wav\nambient/nature/bird2.wav', tMin: '2.0', tMax: '6.5', vMin: '0.4', vMax: '0.8', pMin: '95', pMax: '105', pos: '0', lvl: 'SNDLVL_NORM' }
+            ]
+        };
+
+        const escapeHTML = (str) => str.replace(/"/g, '&quot;');
+
+        function updateState(key, val) { state[key] = val; renderPreview(); }
+        function updateLoop(i, key, val) { state.loops[i][key] = val; renderPreview(); }
+        function updateRand(i, key, val) { state.randoms[i][key] = val; renderPreview(); }
+
+        function addLoop() {
+            state.loops.unshift({ wave: '', vol: '1.0', pitch: '100', pos: '0', lvl: 'SNDLVL_NORM' });
+            renderDOM(); renderPreview();
+        }
+        function addRand() {
+            state.randoms.unshift({ waves: '', tMin: '1.0', tMax: '3.0', vMin: '0.5', vMax: '1.0', pMin: '100', pMax: '100', pos: '0', lvl: 'SNDLVL_NORM' });
+            renderDOM(); renderPreview();
+        }
+        function removeLoop(i) { state.loops.splice(i, 1); renderDOM(); renderPreview(); }
+        function removeRand(i) { state.randoms.splice(i, 1); renderDOM(); renderPreview(); }
+
+        function renderDOM() {
+            const lCont = document.getElementById('loopsContainer');
+            lCont.innerHTML = state.loops.map((L, i) => `
+                <fieldset>
+                    <legend>Looping Emitter #${i+1} <button class="del-btn" onclick="removeLoop(${i})">[X] DEL</button></legend>
+                    <div class="form-row">
+                        <label>File Path</label>
+                        <input type="text" value="${escapeHTML(L.wave)}" oninput="updateLoop(${i}, 'wave', this.value)" placeholder="ambient/wind.wav">
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col"><label>Volume</label><input type="number" step="0.1" value="${L.vol}" oninput="updateLoop(${i}, 'vol', this.value)"></div>
+                        <div class="flex-col"><label>Pitch (1-255)</label><input type="number" value="${L.pitch}" oninput="updateLoop(${i}, 'pitch', this.value)"></div>
+                    </div>
+                    <div class="flex-row" style="margin-bottom:0;">
+                        <div class="flex-col">
+                            <label>3D Target Pos</label>
+                            <select oninput="updateLoop(${i}, 'pos', this.value)">
+                                <option value="0" ${L.pos==='0'?'selected':''}>0 - Local</option>
+                                <option value="1" ${L.pos==='1'?'selected':''}>1 - Target Entity 1</option>
+                                <option value="2" ${L.pos==='2'?'selected':''}>2 - Target Entity 2</option>
+                            </select>
+                        </div>
+                        <div class="flex-col">
+                            <label>Sound Level (Radius)</label>
+                            <select oninput="updateLoop(${i}, 'lvl', this.value)">
+                                <option value="SNDLVL_NORM" ${L.lvl==='SNDLVL_NORM'?'selected':''}>SNDLVL_NORM</option>
+                                <option value="SNDLVL_NONE" ${L.lvl==='SNDLVL_NONE'?'selected':''}>SNDLVL_NONE (Infinite)</option>
+                                <option value="SNDLVL_140dB" ${L.lvl==='SNDLVL_140dB'?'selected':''}>SNDLVL_140dB (Massive)</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+            `).join('');
+
+            const rCont = document.getElementById('randomsContainer');
+            rCont.innerHTML = state.randoms.map((R, i) => `
+                <fieldset>
+                    <legend>Random Interval Emitter #${i+1} <button class="del-btn" onclick="removeRand(${i})">[X] DEL</button></legend>
+                    <div class="form-row">
+                        <label>File Paths (One per line)</label>
+                        <textarea rows="3" oninput="updateRand(${i}, 'waves', this.value)" placeholder="ambient/bird1.wav\nambient/bird2.wav">${escapeHTML(R.waves)}</textarea>
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col"><label>Time Min</label><input type="number" step="0.1" value="${R.tMin}" oninput="updateRand(${i}, 'tMin', this.value)"></div>
+                        <div class="flex-col"><label>Time Max</label><input type="number" step="0.1" value="${R.tMax}" oninput="updateRand(${i}, 'tMax', this.value)"></div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col"><label>Vol Min</label><input type="number" step="0.1" value="${R.vMin}" oninput="updateRand(${i}, 'vMin', this.value)"></div>
+                        <div class="flex-col"><label>Vol Max</label><input type="number" step="0.1" value="${R.vMax}" oninput="updateRand(${i}, 'vMax', this.value)"></div>
+                        <div class="flex-col"><label>Pitch Min</label><input type="number" value="${R.pMin}" oninput="updateRand(${i}, 'pMin', this.value)"></div>
+                        <div class="flex-col"><label>Pitch Max</label><input type="number" value="${R.pMax}" oninput="updateRand(${i}, 'pMax', this.value)"></div>
+                    </div>
+                    <div class="flex-row" style="margin-bottom:0;">
+                        <div class="flex-col">
+                            <label>3D Target Pos</label>
+                            <select oninput="updateRand(${i}, 'pos', this.value)">
+                                <option value="0" ${R.pos==='0'?'selected':''}>0 - Local</option>
+                                <option value="1" ${R.pos==='1'?'selected':''}>1 - Target Entity 1</option>
+                            </select>
+                        </div>
+                        <div class="flex-col">
+                            <label>Sound Level (Radius)</label>
+                            <select oninput="updateRand(${i}, 'lvl', this.value)">
+                                <option value="SNDLVL_NORM" ${R.lvl==='SNDLVL_NORM'?'selected':''}>SNDLVL_NORM</option>
+                                <option value="SNDLVL_NONE" ${R.lvl==='SNDLVL_NONE'?'selected':''}>SNDLVL_NONE (Infinite)</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+            `).join('');
+        }
+
+        function renderPreview() {
+            let out = '';
+            
+            if (state.engine === 'leak') {
+                out += `// FORMATTED FOR HL2 2003 LEAK\n`;
+                out += `// Compiler: EnvSoundscape_Forge\n\n`;
+            } else {
+                out += `// Compiled via EnvSoundscape_Forge (FILipKOS)\n\n`;
+            }
+
+            out += `"${state.name || 'default_soundscape'}"\n{\n`;
+            out += `\t"dsp"\t\t\t"${state.dsp}"\n`;
+            
+            if (state.engine === 'retail') {
+                out += `\t"dsp_volume"\t"1.0"\n`;
+            }
+
+            state.loops.forEach(L => {
+                if (!L.wave.trim()) return;
+                out += `\n\t"playlooping"\n\t{\n`;
+                out += `\t\t"volume"\t\t"${L.vol}"\n`;
+                out += `\t\t"pitch"\t\t\t"${L.pitch}"\n`;
+                
+                if (L.pos !== '0') out += `\t\t"position"\t\t"${L.pos}"\n`;
+                
+                if (L.lvl !== 'SNDLVL_NORM' && state.engine !== 'retail') {
+                    out += `\t\t// "soundlevel" stripped for leak compat\n`;
+                } else if (L.lvl !== 'SNDLVL_NORM') {
+                    out += `\t\t"soundlevel"\t"${L.lvl}"\n`;
+                }
+                
+                out += `\t\t"wave"\t\t\t"${L.wave.trim()}"\n`;
+                out += `\t}\n`;
+            });
+
+            state.randoms.forEach(R => {
+                let lines = R.waves.split('\n').filter(l => l.trim());
+                if (lines.length === 0) return;
+                
+                out += `\n\t"playrandom"\n\t{\n`;
+                out += `\t\t"time"\t\t\t"${R.tMin}, ${R.tMax}"\n`;
+                out += `\t\t"volume"\t\t"${R.vMin}, ${R.vMax}"\n`;
+                
+                if (R.pMin === R.pMax) out += `\t\t"pitch"\t\t\t"${R.pMin}"\n`;
+                else out += `\t\t"pitch"\t\t\t"${R.pMin}, ${R.pMax}"\n`;
+
+                if (R.pos !== '0') out += `\t\t"position"\t\t"${R.pos}"\n`;
+                
+                if (R.lvl !== 'SNDLVL_NORM' && state.engine !== 'retail') {
+                    out += `\t\t// "soundlevel" stripped for leak compat\n`;
+                } else if (R.lvl !== 'SNDLVL_NORM') {
+                    out += `\t\t"soundlevel"\t"${R.lvl}"\n`;
+                }
+
+                out += `\n\t\t"rndwave"\n\t\t{\n`;
+                lines.forEach(line => {
+                    out += `\t\t\t"wave"\t"${line.trim()}"\n`;
+                });
+                out += `\t\t}\n\t}\n`;
+            });
+
+            out += `}\n`;
+            document.getElementById('previewText').value = out;
+        }
+
+        function downloadTxt() {
+            const text = document.getElementById('previewText').value;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = state.filename || 'soundscapes.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('previewText').value;
+            navigator.clipboard.writeText(text);
+            const btn = document.querySelector('button[onclick="copyToClipboard()"]');
+            btn.textContent = "Copied!";
+            setTimeout(() => btn.textContent = "Copy to Clipboard", 1500);
+        }
+
+        renderDOM();
+        renderPreview();
+    </script>
+</body>
+</html>
