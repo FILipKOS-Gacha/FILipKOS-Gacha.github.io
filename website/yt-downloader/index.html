@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YTIMP4 - YouTube Video Downloader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #0f0f0f;
+            color: #f1f1f1;
+        }
+
+        .header {
+            background: #212121;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #3e3e3e;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #ff0000;
+            background: none;
+            -webkit-background-clip: unset;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 600px;
+            display: flex;
+            gap: 0;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: #121212;
+            border: 1px solid #303030;
+            border-radius: 40px 0 0 40px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #1c62b9;
+        }
+
+        .search-btn {
+            padding: 0.75rem 1.5rem;
+            background: #323232;
+            border: 1px solid #303030;
+            border-left: none;
+            border-radius: 0 40px 40px 0;
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .search-btn:hover {
+            background: #424242;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #303030;
+            border-top: 4px solid #ff0000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .result-card {
+            background: #212121;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .video-info {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .thumbnail {
+            position: relative;
+        }
+
+        .thumbnail img {
+            width: 320px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .live-badge-large {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: #ff0000;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .details {
+            flex: 1;
+        }
+
+        .video-title {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-meta {
+            color: #aaaaaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .quality-section {
+            background: #2a2a2a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .quality-label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background: #121212;
+            color: white;
+            border: 1px solid #3e3e3e;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        .download-button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .download-button:hover {
+            background: #cc0000;
+        }
+
+        .download-button:disabled {
+            background: #5a5a5a;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: #2a2a2a;
+            border-left: 4px solid #ff0000;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .search-bar {
+                width: 100%;
+            }
+            .thumbnail img {
+                width: 100%;
+            }
+            .video-info {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">YTIMP4</div>
+            <div class="search-bar">
+                <input type="text" id="urlInput" class="search-input" placeholder="Paste YouTube URL here...">
+                <button id="fetchBtn" class="search-btn">Fetch</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="resultCard" class="result-card">
+            <div class="video-info">
+                <div class="thumbnail">
+                    <img id="thumbnail" alt="Video thumbnail">
+                    <div id="liveBadge" class="live-badge-large" style="display: none;">LIVE</div>
+                </div>
+                <div class="details">
+                    <div class="video-title" id="title"></div>
+                    <div class="video-meta" id="meta"></div>
+                    <div class="quality-section">
+                        <div class="quality-label">Download Quality</div>
+                        <select id="qualitySelect">
+                            <option>Loading formats...</option>
+                        </select>
+                        <button id="downloadBtn" class="download-button">Download MP4</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="errorMsg" class="error-message"></div>
+    </div>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Fetching video information...</div>
+    </div>
+
+    <script>
+        const urlInput = document.getElementById('urlInput');
+        const fetchBtn = document.getElementById('fetchBtn');
+        const resultCard = document.getElementById('resultCard');
+        const titleEl = document.getElementById('title');
+        const thumbnailEl = document.getElementById('thumbnail');
+        const metaEl = document.getElementById('meta');
+        const liveBadge = document.getElementById('liveBadge');
+        const qualitySelect = document.getElementById('qualitySelect');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const errorDiv = document.getElementById('errorMsg');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        let currentVideoId = null;
+        let currentFormats = [];
+
+        function extractVideoId(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?v=))([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[7] && match[7].length === 11) ? match[7] : null;
+        }
+
+        function showLoading() {
+            loadingOverlay.style.display = 'flex';
+        }
+
+        function hideLoading() {
+            loadingOverlay.style.display = 'none';
+        }
+
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            resultCard.style.display = 'none';
+        }
+
+        function hideError() {
+            errorDiv.style.display = 'none';
+        }
+
+        async function fetchWithProxy(url) {
+            const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+            const response = await fetch(proxy);
+            if (!response.ok) throw new Error('Network request failed');
+            return await response.text();
+        }
+
+        async function fetchJsonWithProxy(url) {
+            const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+            const response = await fetch(proxy);
+            if (!response.ok) throw new Error('Network request failed');
+            const data = await response.json();
+            return JSON.parse(data.contents);
+        }
+
+        fetchBtn.onclick = async () => {
+            const url = urlInput.value.trim();
+            if (!url) {
+                showError('Please enter a YouTube URL');
+                return;
+            }
+
+            showLoading();
+            hideError();
+            resultCard.style.display = 'none';
+            qualitySelect.innerHTML = '<option>Loading formats...</option>';
+            
+            const videoId = extractVideoId(url);
+            if (!videoId) {
+                hideLoading();
+                showError('Invalid YouTube URL. Please check and try again.');
+                return;
+            }
+            
+            currentVideoId = videoId;
+            
+            try {
+                const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+                const oembedData = await fetchJsonWithProxy(oembedUrl);
+                
+                const thumbnail = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+                const thumbnailFallback = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+                
+                const watchPageUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                const watchHtml = await fetchWithProxy(watchPageUrl);
+                
+                const isLive = watchHtml.includes('"isLive":true') || 
+                               watchHtml.includes('badgeStyleType="LIVE_NOW"') ||
+                               watchHtml.includes('LIVE_STREAM') ||
+                               watchHtml.includes('isLiveBroadcast');
+                
+                const invidiousUrl = `https://invidious.fdn.fr/api/v1/videos/${videoId}`;
+                let formats = [];
+                
+                try {
+                    const invData = await fetchJsonWithProxy(invidiousUrl);
+                    
+                    if (invData.formatStreams) {
+                        formats = invData.formatStreams
+                            .filter(f => f.type && (f.type.includes('video/mp4') || f.type.includes('video/webm')))
+                            .map(f => ({
+                                quality: f.qualityLabel || f.quality || 'Medium',
+                                url: f.url,
+                                mimeType: 'video/mp4'
+                            }));
+                    }
+                    
+                    if (invData.adaptiveFormats && formats.length === 0) {
+                        formats = invData.adaptiveFormats
+                            .filter(f => f.type && f.type.includes('video') && f.url)
+                            .map(f => ({
+                                quality: f.qualityLabel || f.quality || 'HD',
+                                url: f.url,
+                                mimeType: 'video/mp4'
+                            }));
+                    }
+                } catch (e) {
+                    console.log('Invidious API failed, trying fallback');
+                }
+                
+                if (formats.length === 0 && isLive) {
+                    const hlsMatch = watchHtml.match(/hlsManifestUrl["']?\s*:\s*["']([^"']+)["']/);
+                    if (hlsMatch && hlsMatch[1]) {
+                        formats.push({
+                            quality: 'Live Stream (HLS)',
+                            url: hlsMatch[1],
+                            mimeType: 'application/vnd.apple.mpegurl'
+                        });
+                    } else {
+                        formats.push({
+                            quality: 'Live Stream (Direct)',
+                            url: `https://www.youtube.com/watch?v=${videoId}`,
+                            mimeType: 'video/mp4'
+                        });
+                    }
+                }
+                
+                if (formats.length === 0) {
+                    const videoInfoUrl = `https://www.youtube.com/get_video_info?video_id=${videoId}&eurl=https://youtube.com/watch?v=${videoId}`;
+                    try {
+                        const videoInfoText = await fetchWithProxy(videoInfoUrl);
+                        const params = new URLSearchParams(videoInfoText);
+                        const playerResponse = params.get('player_response');
+                        if (playerResponse) {
+                            const playerData = JSON.parse(playerResponse);
+                            const streamingData = playerData.streamingData;
+                            if (streamingData && streamingData.formats) {
+                                formats = streamingData.formats
+                                    .filter(f => f.mimeType && f.mimeType.includes('video/mp4'))
+                                    .map(f => ({
+                                        quality: f.qualityLabel || f.quality,
+                                        url: f.url,
+                                        mimeType: 'video/mp4'
+                                    }));
+                            }
+                        }
+                    } catch (e) {
+                        console.log('Video info API failed');
+                    }
+                }
+                
+                titleEl.innerText = oembedData.title || 'Unknown Title';
+                thumbnailEl.onerror = () => { thumbnailEl.src = thumbnailFallback; };
+                thumbnailEl.src = thumbnail;
+                
+                const duration = oembedData.author_name ? `Channel: ${oembedData.author_name}` : 'YouTube Video';
+                
+                if (isLive) {
+                    liveBadge.style.display = 'block';
+                    metaEl.innerHTML = `LIVE STREAM | ${duration}`;
+                } else {
+                    liveBadge.style.display = 'none';
+                    metaEl.innerHTML = `VIDEO | ${duration}`;
+                }
+                
+                currentFormats = formats || [];
+                
+                if (currentFormats.length === 0) {
+                    qualitySelect.innerHTML = '<option>No downloadable formats available</option>';
+                    downloadBtn.disabled = true;
+                } else {
+                    qualitySelect.innerHTML = currentFormats.map((f, idx) => 
+                        `<option value="${idx}">${f.quality} (${f.mimeType === 'application/vnd.apple.mpegurl' ? 'HLS Live' : 'MP4'})</option>`
+                    ).join('');
+                    downloadBtn.disabled = false;
+                }
+                
+                resultCard.style.display = 'block';
+                hideLoading();
+                
+            } catch (err) {
+                hideLoading();
+                showError(`Failed to fetch video: ${err.message}. Please check your connection and try again.`);
+                console.error(err);
+            }
+        };
+        
+        downloadBtn.onclick = () => {
+            const selectedIndex = qualitySelect.value;
+            if (!selectedIndex || selectedIndex === 'Loading formats...' || !currentFormats[selectedIndex]) {
+                showError('No valid download URL selected');
+                return;
+            }
+            
+            const selectedFormat = currentFormats[parseInt(selectedIndex)];
+            if (!selectedFormat || !selectedFormat.url) {
+                showError('Download URL not available');
+                return;
+            }
+            
+            const a = document.createElement('a');
+            a.href = selectedFormat.url;
+            a.download = `YTIMP4_${currentVideoId}.mp4`;
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            if (!selectedFormat.url.startsWith('blob:') && !selectedFormat.url.startsWith('data:')) {
+                setTimeout(() => {
+                    showError('If download doesn\'t start automatically, right-click the link and select "Save link as"');
+                }, 1000);
+            }
+        };
+
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                fetchBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
