@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WAD3_Forge | FILipKOS</title>
+    <script src="https://cdn.jsdelivr.net/npm/utif@3.0.1/UTIF.js"></script>
     <style>
         * { box-sizing: border-box; }
         
@@ -27,8 +28,8 @@
             border-right: 2px solid #0f0f0f;
             border-top: 1px solid #4a4a4a;
             border-left: 1px solid #4a4a4a;
-            width: 800px;
-            height: 600px;
+            width: 850px;
+            height: 650px;
             display: flex;
             flex-direction: column;
             box-shadow: 12px 12px 20px rgba(0,0,0,0.8);
@@ -51,6 +52,7 @@
             display: flex;
             flex-direction: column;
             flex: 1;
+            min-height: 0;
         }
 
         .author-tag {
@@ -65,7 +67,7 @@
         .drop-zone {
             background: #1e1e1e;
             border: 2px dashed #555;
-            padding: 30px;
+            padding: 25px;
             text-align: center;
             color: #aaa;
             cursor: pointer;
@@ -79,17 +81,8 @@
             color: #fff;
         }
 
-        .settings-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .settings-col {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
+        .settings-row { display: flex; gap: 15px; margin-bottom: 15px; }
+        .settings-col { flex: 1; display: flex; flex-direction: column; }
 
         label {
             font-size: 11px;
@@ -120,11 +113,13 @@
             overflow-y: auto;
             margin-bottom: 15px;
             white-space: pre-wrap;
+            min-height: 0;
         }
         
         .log-warn { color: #f39c12; }
         .log-err { color: #ff3333; }
         .log-success { color: #00ff00; }
+        .log-info { color: #88ccff; }
 
         button {
             background: #3a3a3a;
@@ -139,17 +134,17 @@
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
+            flex-shrink: 0;
         }
 
         button:hover { background: #4a4a4a; }
-        button:active {
-            border-top: 2px solid #0f0f0f;
-            border-left: 2px solid #0f0f0f;
-            border-bottom: 1px solid #666;
-            border-right: 1px solid #666;
-            background: #2a2a2a;
-        }
+        button:active { background: #2a2a2a; border-top: 2px solid #0f0f0f; border-left: 2px solid #0f0f0f; border-bottom: 1px solid #666; border-right: 1px solid #666; }
         button:disabled { background: #222; color: #555; border-color: #111; cursor: not-allowed; }
+        
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; border-left: 1px solid #333; }
+        ::-webkit-scrollbar-thumb { background: #444; border: 1px solid #222; }
+        ::-webkit-scrollbar-thumb:hover { background: #f39c12; }
     </style>
 </head>
 <body>
@@ -164,19 +159,15 @@
 
             <div class="settings-row">
                 <div class="settings-col">
-                    <label>Output WAD File Name</label>
+                    <label>Output WAD Archive Name</label>
                     <input type="text" id="wadName" value="custom_textures.wad">
-                </div>
-                <div class="settings-col">
-                    <label>Auto-Scale Mode</label>
-                    <input type="text" value="Force multiples of 16 (Max 512x512)" disabled>
                 </div>
             </div>
 
             <div class="drop-zone" id="dropZone">
-                <p style="font-weight: bold; font-size: 14px; margin-bottom: 5px;">DRAG AND DROP .PNG / .JPG FILES HERE</p>
-                <p style="font-size: 11px;">(Export your Source .VTF files to .PNG via VTFEdit first)</p>
-                <input type="file" id="fileInput" multiple accept="image/png, image/jpeg" style="display:none;">
+                <p style="font-weight: bold; font-size: 13px; margin-bottom: 5px;">DRAG & DROP IMAGE FILES HERE</p>
+                <p style="font-size: 11px;">(Export your Source .VTF files to .PNG or any format via VTFEdit first)</p>
+                <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.tga,.tif,.tiff,.vmt" style="display:none;">
             </div>
 
             <label style="color: #f39c12;">Compiler Console:</label>
@@ -193,7 +184,7 @@
         const compileBtn = document.getElementById('compileBtn');
         const wadNameInput = document.getElementById('wadName');
 
-        let pendingFiles = [];
+        let rawFiles = [];
         let lumps = [];
 
         function log(msg, type = '') {
@@ -201,6 +192,7 @@
             if (type) div.className = `log-${type}`;
             div.textContent = `> ${msg}`;
             terminal.appendChild(div);
+            // Auto scroll to bottom
             terminal.scrollTop = terminal.scrollHeight;
         }
 
@@ -217,80 +209,150 @@
 
         function handleFiles(files) {
             for (let f of files) {
-                if (f.type.startsWith('image/')) {
-                    pendingFiles.push(f);
-                    log(`Queued texture: ${f.name}`);
-                }
+                rawFiles.push(f);
+                log(`Queued file: ${f.name}`);
             }
-            if (pendingFiles.length > 0) {
+            if (rawFiles.length > 0) {
                 compileBtn.disabled = false;
-                compileBtn.textContent = `Compile ${pendingFiles.length} Textures to .WAD`;
+                compileBtn.textContent = `Process ${rawFiles.length} files & Compile .WAD`;
             }
         }
 
         compileBtn.addEventListener('click', async () => {
             compileBtn.disabled = true;
             lumps = [];
-            log(`\n--- INITIATING WAD3 BUILD ---`, 'warn');
+            log(`\n--- INITIATING ADVANCED WAD3 BUILD ---`, 'warn');
 
-            for (let file of pendingFiles) {
-                await processImage(file);
+            // Parse VMT files to find $alphatest / $translucent
+            const vmtAlphaSet = new Set();
+            const imgFiles = [];
+
+            for (let file of rawFiles) {
+                const nameLow = file.name.toLowerCase();
+                if (nameLow.endsWith('.vmt')) {
+                    const text = await file.text();
+                    if (text.toLowerCase().includes('$alphatest') || text.toLowerCase().includes('$translucent')) {
+                        const baseName = nameLow.replace('.vmt', '');
+                        vmtAlphaSet.add(baseName);
+                        log(`Parsed VMT: [${baseName}] forces Alpha/Transparency.`, 'info');
+                    }
+                } else {
+                    imgFiles.push(file);
+                }
             }
 
-            log(`\nAll textures crunched. Compiling WAD directory...`, 'warn');
+            // Extract ImageData for all image files
+            const texDataMap = {};
+            
+            for (let file of imgFiles) {
+                const ext = file.name.split('.').pop().toLowerCase();
+                let baseName = file.name.substring(0, file.name.lastIndexOf('.')).toLowerCase();
+                let imgData = null;
+
+                try {
+                    if (ext === 'tga') imgData = await readTGA(file);
+                    else if (ext === 'tif' || ext === 'tiff') imgData = await readTIF(file);
+                    else imgData = await readStandardImage(file);
+                } catch (e) {
+                    log(`Error reading ${file.name}: ${e.message}`, 'err');
+                    continue;
+                }
+
+                if (!imgData) continue;
+
+                // Check native alpha pixels
+                let hasNativeAlpha = false;
+                for (let i = 3; i < imgData.data.length; i += 4) {
+                    if (imgData.data[i] < 128) { hasNativeAlpha = true; break; }
+                }
+
+                // If VMT flags it OR PNG/TGA has transparent pixels, force { transparency
+                const needsAlpha = hasNativeAlpha || vmtAlphaSet.has(baseName);
+
+                // Check for Animation Prefix (+0, +A, -0)
+                let groupKey = baseName;
+                let isAnimated = /^([+-][0-9a-z])/i.test(baseName);
+                if (isAnimated) {
+                    groupKey = baseName.substring(2); 
+                }
+
+                if (!texDataMap[groupKey]) texDataMap[groupKey] = [];
+                texDataMap[groupKey].push({
+                    originalName: baseName,
+                    imgData: imgData,
+                    needsAlpha: needsAlpha
+                });
+            }
+
+            // Mipmaps, Group Palettes, and Duplicate Resolution
+            const finalLumpMap = {}; // Tracks texture names to prevent duplicates crashing J.A.C.K
+
+            for (let groupKey in texDataMap) {
+                const groupFrames = texDataMap[groupKey];
+                const groupHasAlpha = groupFrames.some(f => f.needsAlpha);
+
+                log(`\nProcessing Group: [${groupKey}] (${groupFrames.length} frame(s)) | Transparent: ${groupHasAlpha}`);
+
+                // Scale and generate mips for every frame
+                for (let frame of groupFrames) {
+                    frame.mips = generateMipmaps(frame.imgData);
+                }
+
+                // If animated, generate one SHARED master palette to prevent flickering
+                log(`  -> Calculating Master Palette...`);
+                const allMip0Data = groupFrames.map(f => f.mips[0].data);
+                const { palette, cache } = generatePalette(allMip0Data, groupHasAlpha);
+
+                for (let frame of groupFrames) {
+                    // Format Name correctly: Max 15 chars, uppercase, add { if transparent
+                    let finalName = frame.originalName.substring(0, 15).toUpperCase();
+                    if (groupHasAlpha && !finalName.startsWith('{')) {
+                        finalName = `{${finalName.substring(0, 14)}`;
+                    }
+
+                    // Strict Duplicate Handling for Editors (J.A.C.K. / Hammer)
+                    if (finalLumpMap[finalName]) {
+                        log(`  -> WARNING: Name collision! Overwriting duplicate texture [${finalName}]`, 'warn');
+                    } else {
+                        log(`  -> Encoding Frame: ${finalName}...`);
+                    }
+
+                    const mipIndices = frame.mips.map(mip => mapPixelsToPalette(mip.data, palette, cache, groupHasAlpha));
+                    const lumpData = buildMiptexLump(finalName, frame.mips[0].width, frame.mips[0].height, mipIndices, palette);
+                    
+                    // Assign to map (Overwrites older collision if one existed)
+                    finalLumpMap[finalName] = { name: finalName, data: lumpData };
+                }
+            }
+
+            // Convert Deduplicated Map into Flat Array for Compiling
+            lumps = Object.values(finalLumpMap);
+
+            if (lumps.length === 0) {
+                log(`\nFATAL: No valid textures to compile.`, 'err');
+                compileBtn.disabled = false;
+                compileBtn.textContent = `Process files & Compile .WAD`;
+                return;
+            }
+
+            log(`\nAll textures crunched safely. Compiling WAD directory...`, 'warn');
             buildWAD();
         });
 
         // --------------------------------------------------------
-        // IMAGE PROCESSING & GOLDSOURCE COMPRESSION
+        // IMAGE DECODERS (Canvas, custom TGA, UTIF)
         // --------------------------------------------------------
-        async function processImage(file) {
+        async function readStandardImage(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const img = new Image();
                     img.onload = () => {
-                        let texName = file.name.substring(0, file.name.lastIndexOf('.')).substring(0, 15).toUpperCase();
-                        texName = texName.replace(/[^A-Z0-9_{}]/g, '_');
-
-                        // GoldSource restricts dimensions to multiples of 16. Max is usually 512.
-                        let w = Math.round(img.width / 16) * 16;
-                        let h = Math.round(img.height / 16) * 16;
-                        if (w < 16) w = 16; if (h < 16) h = 16;
-                        if (w > 512) w = 512; if (h > 512) h = 512;
-
-                        log(`Processing [${texName}] -> Rescaled to ${w}x${h}...`);
-
                         const canvas = document.createElement('canvas');
+                        canvas.width = img.width; canvas.height = img.height;
                         const ctx = canvas.getContext('2d');
-                        
-                        // Mipmap generation
-                        const mips = [];
-                        let curW = w;
-                        let curH = h;
-
-                        for (let i = 0; i < 4; i++) {
-                            canvas.width = curW;
-                            canvas.height = curH;
-                            ctx.drawImage(img, 0, 0, curW, curH);
-                            mips.push(ctx.getImageData(0, 0, curW, curH));
-                            curW = Math.max(1, Math.floor(curW / 2));
-                            curH = Math.max(1, Math.floor(curH / 2));
-                        }
-
-                        // Generate 256 Color Palette (Popularity Quantization)
-                        log(`  -> Calculating 8-bit palette...`);
-                        const { palette, cache } = generatePalette(mips[0].data);
-
-                        log(`  -> Mapping mipmaps to 8-bit indexing...`);
-                        const mipIndices = mips.map(mip => mapPixelsToPalette(mip.data, palette, cache));
-
-                        // Build MIPTEX Lump
-                        const lumpData = buildMiptexLump(texName, w, h, mipIndices, palette);
-                        lumps.push({ name: texName, data: lumpData });
-                        
-                        log(`  -> SUCCESS: Stored in memory.`, 'success');
-                        resolve();
+                        ctx.drawImage(img, 0, 0);
+                        resolve(ctx.getImageData(0, 0, img.width, img.height));
                     };
                     img.src = e.target.result;
                 };
@@ -298,30 +360,138 @@
             });
         }
 
-        // Extremely fast Popularity-based Color Quantization
-        function generatePalette(pixels) {
+        async function readTIF(file) {
+            const buffer = await file.arrayBuffer();
+            const ifds = UTIF.decode(buffer);
+            UTIF.decodeImage(buffer, ifds[0]);
+            const rgba = UTIF.toRGBA8(ifds[0]);
+            return new ImageData(new Uint8ClampedArray(rgba), ifds[0].width, ifds[0].height);
+        }
+
+        async function readTGA(file) {
+            const buffer = await file.arrayBuffer();
+            let view = new DataView(buffer);
+            let u8 = new Uint8Array(buffer);
+            let idLen = u8[0];
+            let imgType = u8[2];
+            let w = view.getUint16(12, true);
+            let h = view.getUint16(14, true);
+            let bpp = u8[16];
+            let desc = u8[17];
+            
+            if ((imgType !== 2 && imgType !== 10) || (bpp !== 24 && bpp !== 32)) {
+                throw new Error("Unsupported TGA format (Needs 24/32-bit).");
+            }
+            
+            let offset = 18 + idLen;
+            let pixels = new Uint8ClampedArray(w * h * 4);
+            let px = 0;
+            
+            if (imgType === 2) { 
+                for (let i = 0; i < w * h; i++) {
+                    pixels[px++] = u8[offset + 2]; 
+                    pixels[px++] = u8[offset + 1]; 
+                    pixels[px++] = u8[offset];     
+                    pixels[px++] = bpp === 32 ? u8[offset + 3] : 255; 
+                    offset += (bpp / 8);
+                }
+            } else if (imgType === 10) { 
+                let decoded = 0;
+                while (decoded < w * h) {
+                    let packet = u8[offset++];
+                    let count = (packet & 0x7F) + 1;
+                    if (packet & 0x80) { 
+                        let b = u8[offset++]; let g = u8[offset++]; let r = u8[offset++]; let a = bpp === 32 ? u8[offset++] : 255;
+                        for (let i = 0; i < count; i++) {
+                            pixels[px++] = r; pixels[px++] = g; pixels[px++] = b; pixels[px++] = a;
+                        }
+                    } else { 
+                        for (let i = 0; i < count; i++) {
+                            pixels[px++] = u8[offset + 2]; pixels[px++] = u8[offset + 1]; pixels[px++] = u8[offset]; pixels[px++] = bpp === 32 ? u8[offset + 3] : 255;
+                            offset += (bpp / 8);
+                        }
+                    }
+                    decoded += count;
+                }
+            }
+            
+            let imgData = new ImageData(pixels, w, h);
+            if (!(desc & 0x20)) { 
+                let stride = w * 4;
+                for (let y = 0; y < Math.floor(h / 2); y++) {
+                    let top = y * stride;
+                    let bot = (h - 1 - y) * stride;
+                    for (let x = 0; x < stride; x++) {
+                        let temp = pixels[top + x]; pixels[top + x] = pixels[bot + x]; pixels[bot + x] = temp;
+                    }
+                }
+            }
+            return imgData;
+        }
+
+        // --------------------------------------------------------
+        // ENGINE SPECIFIC PROCESSING
+        // --------------------------------------------------------
+        function generateMipmaps(imgData) {
+            let w = Math.round(imgData.width / 16) * 16;
+            let h = Math.round(imgData.height / 16) * 16;
+            if (w < 16) w = 16; if (h < 16) h = 16;
+            if (w > 512) w = 512; if (h > 512) h = 512;
+
+            const mips = [];
+            const canvasA = document.createElement('canvas');
+            const ctxA = canvasA.getContext('2d');
+            canvasA.width = imgData.width; canvasA.height = imgData.height;
+            ctxA.putImageData(imgData, 0, 0);
+
+            const canvasB = document.createElement('canvas');
+            const ctxB = canvasB.getContext('2d');
+            
+            let curW = w; let curH = h;
+            for (let i = 0; i < 4; i++) {
+                canvasB.width = curW; canvasB.height = curH;
+                ctxB.drawImage(canvasA, 0, 0, curW, curH);
+                mips.push(ctxB.getImageData(0, 0, curW, curH));
+                curW = Math.max(1, Math.floor(curW / 2));
+                curH = Math.max(1, Math.floor(curH / 2));
+            }
+            return mips;
+        }
+
+        function generatePalette(pixelArrays, hasAlpha) {
             const freq = {};
-            for (let i = 0; i < pixels.length; i += 4) {
-                const rgb = (pixels[i] << 16) | (pixels[i+1] << 8) | pixels[i+2];
-                freq[rgb] = (freq[rgb] || 0) + 1;
+            for (let pixels of pixelArrays) {
+                for (let i = 0; i < pixels.length; i += 4) {
+                    if (hasAlpha && pixels[i+3] < 128) continue; 
+                    const rgb = (pixels[i] << 16) | (pixels[i+1] << 8) | pixels[i+2];
+                    freq[rgb] = (freq[rgb] || 0) + 1;
+                }
             }
 
             const sortedColors = Object.keys(freq).sort((a, b) => freq[b] - freq[a]);
+            const maxColors = hasAlpha ? 255 : 256;
             const palette = [];
-            for (let i = 0; i < Math.min(256, sortedColors.length); i++) {
+            for (let i = 0; i < Math.min(maxColors, sortedColors.length); i++) {
                 const rgb = parseInt(sortedColors[i], 10);
                 palette.push({ r: (rgb >> 16) & 255, g: (rgb >> 8) & 255, b: rgb & 255 });
             }
 
-            // Fill remainder with black if less than 256 unique colors
-            while (palette.length < 256) palette.push({ r: 0, g: 0, b: 0 });
+            while (palette.length < maxColors) palette.push({ r: 0, g: 0, b: 0 });
+            if (hasAlpha) palette.push({ r: 0, g: 0, b: 255 }); 
+            
             return { palette, cache: {} };
         }
 
-        // Map true-color pixels to their nearest 8-bit index
-        function mapPixelsToPalette(pixels, palette, cache) {
+        function mapPixelsToPalette(pixels, palette, cache, hasAlpha) {
             const indices = new Uint8Array(pixels.length / 4);
+            const searchLimit = hasAlpha ? 255 : 256;
+
             for (let i = 0; i < pixels.length; i += 4) {
+                if (hasAlpha && pixels[i+3] < 128) {
+                    indices[i/4] = 255; 
+                    continue;
+                }
+
                 const r = pixels[i]; const g = pixels[i+1]; const b = pixels[i+2];
                 const key = (r << 16) | (g << 8) | b;
                 
@@ -330,10 +500,9 @@
                 } else {
                     let minDist = Infinity;
                     let bestIndex = 0;
-                    for (let j = 0; j < 256; j++) {
+                    for (let j = 0; j < searchLimit; j++) {
                         const p = palette[j];
-                        const dr = r - p.r; const dg = g - p.g; const db = b - p.b;
-                        const dist = dr*dr + dg*dg + db*db; // Fast Euclidean
+                        const dist = (r-p.r)**2 + (g-p.g)**2 + (b-p.b)**2; 
                         if (dist < minDist) { minDist = dist; bestIndex = j; }
                     }
                     cache[key] = bestIndex;
@@ -344,80 +513,51 @@
         }
 
         // --------------------------------------------------------
-        // WAD3 FORMAT COMPILER
+        // WAD3 FORMAT BUILDER
         // --------------------------------------------------------
         function buildMiptexLump(name, w, h, mips, palette) {
             const p0Size = w * h;
-            const p1Size = mips[1].length;
-            const p2Size = mips[2].length;
-            const p3Size = mips[3].length;
+            const offset1 = 40 + p0Size;
+            const offset2 = offset1 + mips[1].length;
+            const offset3 = offset2 + mips[2].length;
+            const palOffset = offset3 + mips[3].length;
 
-            const offset0 = 40; 
-            const offset1 = offset0 + p0Size;
-            const offset2 = offset1 + p1Size;
-            const offset3 = offset2 + p2Size;
-            const palOffset = offset3 + p3Size;
-
-            const lumpSize = palOffset + 2 + 768 + 2; 
-            const buffer = new ArrayBuffer(lumpSize);
+            const buffer = new ArrayBuffer(palOffset + 2 + 768 + 2);
             const view = new DataView(buffer);
             const u8 = new Uint8Array(buffer);
 
-            // Write Name (16 bytes, null padded)
-            for (let i = 0; i < 16; i++) {
-                view.setUint8(i, i < name.length ? name.charCodeAt(i) : 0);
-            }
-            
-            // Width, Height, Offsets
+            for (let i = 0; i < 16; i++) view.setUint8(i, i < name.length ? name.charCodeAt(i) : 0);
             view.setUint32(16, w, true);
             view.setUint32(20, h, true);
-            view.setUint32(24, offset0, true);
+            view.setUint32(24, 40, true);
             view.setUint32(28, offset1, true);
             view.setUint32(32, offset2, true);
             view.setUint32(36, offset3, true);
 
-            // Write Mipmaps
-            u8.set(mips[0], offset0);
-            u8.set(mips[1], offset1);
-            u8.set(mips[2], offset2);
-            u8.set(mips[3], offset3);
+            u8.set(mips[0], 40); u8.set(mips[1], offset1); u8.set(mips[2], offset2); u8.set(mips[3], offset3);
 
-            // Write Palette (Size 256, then 768 bytes RGB)
             view.setUint16(palOffset, 256, true);
             let pIdx = palOffset + 2;
             for (let i = 0; i < 256; i++) {
-                u8[pIdx++] = palette[i].r;
-                u8[pIdx++] = palette[i].g;
-                u8[pIdx++] = palette[i].b;
+                u8[pIdx++] = palette[i].r; u8[pIdx++] = palette[i].g; u8[pIdx++] = palette[i].b;
             }
-            
-            // 2 Bytes padding at the end
             view.setUint16(pIdx, 0, true);
-
             return u8;
         }
 
         function buildWAD() {
-            const headerSize = 12;
-            const dirEntrySize = 32;
             const numLumps = lumps.length;
+            let totalLumpSize = 0; lumps.forEach(l => totalLumpSize += l.data.length);
+            const dirOffset = 12 + totalLumpSize;
             
-            let totalLumpSize = 0;
-            lumps.forEach(l => totalLumpSize += l.data.length);
-
-            const dirOffset = headerSize + totalLumpSize;
-            const totalFileSize = dirOffset + (numLumps * dirEntrySize);
-            
-            const buffer = new ArrayBuffer(totalFileSize);
+            const buffer = new ArrayBuffer(dirOffset + (numLumps * 32));
             const view = new DataView(buffer);
             const u8 = new Uint8Array(buffer);
 
-            // WRITE WAD HEADER
-            u8[0] = 87; u8[1] = 65; u8[2] = 68; u8[3] = 51; // "WAD3"
+            u8[0] = 87; u8[1] = 65; u8[2] = 68; u8[3] = 51; // WAD3
             view.setUint32(4, numLumps, true);
             view.setUint32(8, dirOffset, true);
 
-            // WRITE LUMPS
             let curOffset = 12;
             const lumpMeta = [];
             for (let l of lumps) {
@@ -426,34 +566,26 @@
                 curOffset += l.data.length;
             }
 
-            // WRITE DIRECTORY
             let dirIdx = dirOffset;
             for (let meta of lumpMeta) {
                 view.setUint32(dirIdx, meta.offset, true);
-                view.setUint32(dirIdx + 4, meta.size, true); // DiskSize
-                view.setUint32(dirIdx + 8, meta.size, true); // Size
-                view.setUint8(dirIdx + 12, 0x43); // Type: 67 (MIPTEX)
-                view.setUint8(dirIdx + 13, 0x00); // Compression
-                view.setUint16(dirIdx + 14, 0x00, true); // Padding
-                
-                // Name
-                for (let i = 0; i < 16; i++) {
-                    view.setUint8(dirIdx + 16 + i, i < meta.name.length ? meta.name.charCodeAt(i) : 0);
-                }
+                view.setUint32(dirIdx + 4, meta.size, true);
+                view.setUint32(dirIdx + 8, meta.size, true);
+                view.setUint8(dirIdx + 12, 0x43); // 67 MIPTEX
+                view.setUint8(dirIdx + 13, 0x00); 
+                for (let i = 0; i < 16; i++) view.setUint8(dirIdx + 16 + i, i < meta.name.length ? meta.name.charCodeAt(i) : 0);
                 dirIdx += 32;
             }
 
-            // TRIGGER DOWNLOAD
-            log(`WAD Compilation Complete! (${(totalFileSize / 1024 / 1024).toFixed(2)} MB)`, 'success');
-            const blob = new Blob([buffer], { type: 'application/octet-stream' });
+            log(`WAD Compilation Complete! (${(buffer.byteLength / 1024 / 1024).toFixed(2)} MB)`, 'success');
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
+            a.href = URL.createObjectURL(new Blob([buffer], { type: 'application/octet-stream' }));
             a.download = wadNameInput.value || "custom_textures.wad";
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
 
-            pendingFiles = [];
+            rawFiles = [];
             compileBtn.textContent = "Awaiting New Textures...";
         }
     </script>
