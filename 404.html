@@ -22,6 +22,16 @@
     </style>
 </head>
 <body>
-    <img src="files/404.png" alt="Uh oh! The page was either not found or doesn't works! - Plush">
+    <img id="random-image" alt="404 Page Not Found">
+
+    <script>
+        const images = [
+            'files/404.png',
+            'files/404_1.png'
+        ];
+
+        const randomIndex = Math.floor(Math.random() * images.length);
+        document.getElementById('random-image').src = images[randomIndex];
+    </script>
 </body>
 </html>
