@@ -284,6 +284,11 @@
             font-size: 1.1rem;
         }
 
+
+        /* Tools section: extra row of small utility cards */
+        .tool-card .tag { align-self: flex-start; }
+        .tool-note { font-size: 0.8rem; color: var(--text-muted); margin: -8px 0 16px; }
+
         @media (max-width: 600px) {
             .social-links { flex-direction: column; }
             .btn { width: 100%; justify-content: center; }
@@ -352,6 +357,45 @@
                 <h3>Art Portfolio</h3>
                 <p>Source Filmmaker (SFM) renders and scenes.</p>
                 <a href="https://filipkos-gacha.github.io/projects/portfolio" class="btn" target="_blank">View Gallery</a>
+            </article>
+
+            <!-- Tools Section (NEW) -->
+            <h2 class="section-title">Source Engine Tools</h2>
+
+            <article class="card tool-card">
+                <div class="card-header">
+                    <span class="tag">In development</span>
+                </div>
+                <h3>Worldcraft++</h3>
+                <p>A community-stabilized build of the leaked Hammer editor, aimed at the 2003 Half-Life 2 leak.</p>
+                <a href="website/hammer/" class="btn">Open Project Hub</a>
+            </article>
+
+            <article class="card tool-card">
+                <div class="card-header">
+                    <span class="tag">Browser tool</span>
+                </div>
+                <h3>Audio Converter</h3>
+                <p>Turns MP3, WAV, OGG and OPUS files into 16-bit 44.1kHz WAV, ready for Source engine games.</p>
+                <a href="website/converter/" class="btn">Open Converter</a>
+            </article>
+
+            <article class="card tool-card">
+                <div class="card-header">
+                    <span class="tag">Browser tool</span>
+                </div>
+                <h3>Soundscape Forge</h3>
+                <p>Build env_soundscape rules with looping and random emitters, then copy or save them as a .txt file.</p>
+                <a href="website/soundscape/" class="btn">Open Forge</a>
+            </article>
+
+            <article class="card tool-card">
+                <div class="card-header">
+                    <span class="tag">Browser tool</span>
+                </div>
+                <h3>WAD3 Forge</h3>
+                <p>Drag in images and compile them into a GoldSource .WAD texture archive.</p>
+                <a href="website/vtf-to-wad/" class="btn">Open Forge</a>
             </article>
         </main>
 
