@@ -3,69 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dakota Expose.</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dakota Expose archive.</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --bg-color: #121214;
+            --surface-color: #1c1c1f;
+            --border-color: #333336;
+            --text-main: #ededed;
+            --text-muted: #8a8a93;
+            --accent: #b28dff;
+            --danger: #e5484d;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Work Sans', sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #121212;
-            color: #f4f4f4;
+            line-height: 1.6;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
-        header {
-            width: 100%;
-            background-color: #2c3e50;
-            padding: 20px;
-            text-align: center;
-        }
+        h1 { font-family: 'Space Grotesk', sans-serif; color: #fff; margin: 0 0 10px; font-size: clamp(1.7rem, 4vw, 2.4rem); line-height: 1.15; }
 
-        header h1 {
-            color: #e74c3c;
-            margin: 0;
-            font-size: 2em;
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+        .wrapper { width: 100%; max-width: 900px; margin: 0 auto; padding: 32px 20px; flex: 1; }
+
+        .back { display: inline-block; margin-bottom: 24px; font-size: 0.9rem; color: var(--text-muted); }
+
+        header { border-bottom: 1px solid var(--border-color); padding-bottom: 24px; margin-bottom: 24px; }
+
+        .warning {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--danger);
+            border-radius: var(--radius);
+            padding: 18px 20px;
         }
+        .warning strong { color: #fff; }
+        .warning p { margin: 6px 0 0; color: var(--text-muted); }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 10px 20px;
+            background: var(--surface-color);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font: 600 0.9rem 'Work Sans', sans-serif;
+            cursor: pointer;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .btn:hover { border-color: var(--accent); transform: translateY(-2px); text-decoration: none; }
+        .btn-primary { background: var(--accent); color: #121214; border-color: var(--accent); }
+        .btn-primary:hover { background: #9867ff; color: #fff; }
+
+        .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
 
         .pdf-container {
-            width: 90%;
-            max-width: 800px;
-            height: 90vh;
-            margin: 20px auto;
-            border: 2px solid #e67e22;
-            border-radius: 8px;
+            display: none;
+            margin-top: 24px;
+            height: 80vh;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            background: var(--surface-color);
         }
+        .pdf-container.open { display: block; }
+        .pdf-container iframe { width: 100%; height: 100%; border: 0; }
+
+        .hint { margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); }
 
         footer {
-            background-color: #2c3e50;
-            color: #f4f4f4;
+            border-top: 1px solid var(--border-color);
+            padding: 24px 20px;
             text-align: center;
-            padding: 10px;
-            width: 100%;
-            position: fixed;
-            bottom: 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        footer p { margin: 4px 0; }
+
+        @media (max-width: 600px) {
+            .actions .btn { width: 100%; }
+            .pdf-container { height: 70vh; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Archived Evidence against Dakota.</h1>
-        <p>This document is provided as evidence and should be viewed with discretion. Grooming/Pedophilia mentions!</p>
-    </header>
+    <div class="wrapper">
+        <a class="back" href="../../../">&larr; Back to FILipKOS</a>
 
-    <div class="pdf-container">
-        <!-- Embed PDF -->
-        <iframe src="Dakota_situation.pdf" width="100%" height="100%" style="border: none;"></iframe>
+        <header>
+            <h1>Archived Evidence against Dakota.</h1>
+        </header>
+
+        <div class="warning" role="alert">
+            <strong>Content warning</strong>
+            <p>This document is provided as evidence and should be viewed with discretion. It contains mentions of sensitive topics.</p>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" id="show-btn" type="button">I understand, show the document</button>
+            <a class="btn" href="Dakota_situation.pdf" target="_blank" rel="noopener">Open PDF in new tab</a>
+        </div>
+
+        <div class="pdf-container" id="pdf-container">
+            <iframe id="pdf-frame" title="Dakota situation document (PDF)"></iframe>
+        </div>
+        <p class="hint">On some phones the PDF may not display inside the page. If so, use "Open PDF in new tab".</p>
+        <noscript><p class="hint">JavaScript is off. Use "Open PDF in new tab" to read the document.</p></noscript>
     </div>
 
     <footer>
-        <p>© 2024 FILipKOS | <a href="https://github.com/FILipKOS-Gacha" style="color: #3498db;">GitHub Profile/Website</a></p>
-		<p>© 2024 Hanevi | Creator of document</p>
+        <p>&copy; 2026 FILipKOS | <a href="https://github.com/FILipKOS-Gacha">GitHub Profile</a></p>
+        <p>&copy; 2024 Hanevi | Creator of document</p>
     </footer>
+
+    <script>
+        document.getElementById('show-btn').addEventListener('click', function () {
+            document.getElementById('pdf-frame').src = 'Dakota_situation.pdf';
+            document.getElementById('pdf-container').classList.add('open');
+            this.style.display = 'none';
+        });
+    </script>
 </body>
 </html>
