@@ -1,11 +1,10 @@
-/* 2003 Old Steam / VGUI2 Web Palette */
 :root {
-    --bg-dark: #2e3626;         /* Deep background */
-    --panel-color: #4b5541;     /* Main container green */
-    --panel-border: #758461;    /* Lighter border outline */
-    --text-main: #afbd9f;       /* Standard VGUI text color */
-    --text-bright: #ffffff;     /* Bright text for headings */
-    --highlight: #e9ab17;       /* GoldSource classic orange */
+    --bg-dark: #2e3626;
+    --panel-color: #4b5541;
+    --panel-border: #758461;
+    --text-main: #afbd9f;
+    --text-bright: #ffffff;
+    --highlight: #e9ab17;
 }
 
 * {
@@ -14,7 +13,7 @@
 
 body {
     background-color: var(--bg-dark);
-    background-image: linear-gradient(to bottom, #2e3626, #1c2216); /* Subtle gradient like old Steam menus */
+    background-image: linear-gradient(to bottom, #2e3626, #1c2216);
     color: var(--text-main);
     font-family: Tahoma, Verdana, Arial, sans-serif;
     font-size: 14px;
@@ -31,7 +30,6 @@ body {
     box-shadow: 0px 8px 24px rgba(0,0,0,0.8);
 }
 
-/* Header Banner */
 .main-header {
     background-color: #384030;
     padding: 40px 30px;
@@ -57,7 +55,6 @@ body {
     color: var(--highlight);
 }
 
-/* Navigation Menu */
 .main-nav {
     display: flex;
     background-color: #21271b;
@@ -91,7 +88,6 @@ body {
     border-bottom: 3px solid var(--highlight);
 }
 
-/* Content Area */
 .content-container {
     padding: 30px;
 }
@@ -110,7 +106,6 @@ h2 {
     border: 1px solid var(--panel-border);
 }
 
-/* Footer */
 footer {
     background-color: #21271b;
     color: #758461;
@@ -120,7 +115,6 @@ footer {
     border-top: 1px solid var(--panel-border);
 }
 
-/* Credits Page Specifics */
 .hover-name {
     color: var(--text-bright);
     text-decoration: underline dotted var(--panel-border);
@@ -153,7 +147,6 @@ footer {
     letter-spacing: 0.5px;
 }
 
-/* Logo Header Styling */
 .header-logo {
     width: 100%;
     max-width: 500px;
@@ -162,7 +155,6 @@ footer {
     margin: 0 auto 15px auto;
 }
 
-/* Update / Accordion Styling */
 .update-block {
     margin-top: 15px;
     background-color: #2e3626;
@@ -176,12 +168,11 @@ footer {
     font-weight: bold;
     padding: 10px 15px;
     cursor: pointer;
-    list-style: none; /* Hides default triangle in most browsers */
+    list-style: none;
     user-select: none;
     border-bottom: 1px solid var(--bg-dark);
 }
 
-/* Hide default triangle in Webkit (Chrome/Edge/Safari) */
 .update-header::-webkit-details-marker {
     display: none;
 }
@@ -219,7 +210,7 @@ details:not([open]) .update-header {
     margin-bottom: 8px;
     line-height: 1.5;
 }
-/* Big Download Button Styling */
+
 .big-download-btn {
     display: inline-block;
     background-color: var(--panel-color);
