@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorldVertex_Forge | FILipKOS</title>
+    <style>
+        * { box-sizing: border-box; }
+        
+        body {
+            background-color: #1a1a1a;
+            background-image: linear-gradient(#222 1px, transparent 1px), linear-gradient(90deg, #222 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #d8d8d8;
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .tool-window {
+            background: #2b2b2b;
+            border-bottom: 2px solid #0f0f0f;
+            border-right: 2px solid #0f0f0f;
+            border-top: 1px solid #4a4a4a;
+            border-left: 1px solid #4a4a4a;
+            width: 980px;
+            height: 720px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 12px 12px 20px rgba(0,0,0,0.8);
+        }
+
+        .title-bar {
+            background: #f39c12; 
+            color: #111;
+            padding: 6px 12px;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            user-select: none;
+            border-bottom: 1px solid #111;
+        }
+
+        .main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .left-panel {
+            flex: 1.2;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 2px solid #111;
+            min-height: 0;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 20px;
+            background: #222;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #4a4a4a;
+            min-height: 0;
+        }
+
+        .author-tag {
+            text-align: right;
+            font-size: 11px;
+            color: #777;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        .author-tag span { color: #f39c12; font-weight: bold; }
+
+        fieldset {
+            border: 1px solid #555;
+            padding: 14px;
+            margin-bottom: 14px;
+            background: #272727;
+        }
+
+        legend {
+            font-size: 11px;
+            color: #f39c12;
+            padding: 0 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .flex-row { display: flex; gap: 10px; margin-bottom: 8px; }
+        .flex-col { display: flex; flex-direction: column; flex: 1; }
+        .form-row { margin-bottom: 10px; }
+        .form-row:last-child { margin-bottom: 0; }
+
+        label {
+            display: block;
+            font-size: 11px;
+            margin-bottom: 4px;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            background: #1e1e1e;
+            color: #fff;
+            border: 1px solid #111;
+            border-bottom: 1px solid #4a4a4a;
+            border-right: 1px solid #4a4a4a;
+            padding: 7px;
+            font-size: 12px;
+            font-family: inherit;
+        }
+
+        input[type="file"] {
+            padding: 4px;
+            cursor: pointer;
+            margin-bottom: 6px;
+        }
+
+        input:focus {
+            outline: none;
+            border-bottom: 1px solid #f39c12;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 11px;
+            color: #ccc;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-container input {
+            cursor: pointer;
+            accent-color: #f39c12;
+        }
+
+        .preview-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        canvas {
+            width: 180px;
+            height: 180px;
+            background: #0a0a0a;
+            border: 1px inset #444;
+            image-rendering: pixelated;
+        }
+
+        .terminal {
+            flex: 1;
+            background: #0a0a0a;
+            color: #4CAF50;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 11px;
+            border: 1px inset #444;
+            padding: 10px;
+            white-space: pre;
+            overflow-x: auto;
+            overflow-y: auto;
+            margin-bottom: 14px;
+            line-height: 1.4;
+            min-height: 0;
+        }
+
+        button {
+            background: #3a3a3a;
+            color: #fff;
+            border-top: 1px solid #666;
+            border-left: 1px solid #666;
+            border-bottom: 2px solid #0f0f0f;
+            border-right: 2px solid #0f0f0f;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: 0.1s;
+        }
+
+        button:hover { background: #4a4a4a; }
+        button:active {
+            border-top: 2px solid #0f0f0f;
+            border-left: 2px solid #0f0f0f;
+            border-bottom: 1px solid #666;
+            border-right: 1px solid #666;
+            background: #2a2a2a;
+        }
+        button:disabled { background: #222; color: #555; border-color: #111; cursor: not-allowed; }
+
+        .btn-action { background: #274e13; color: #a2fca2; }
+        .btn-action:hover { background: #38761d; }
+
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; border-left: 1px solid #111; }
+        ::-webkit-scrollbar-thumb { background: #444; border: 1px solid #222; }
+        ::-webkit-scrollbar-thumb:hover { background: #f39c12; }
+    </style>
+</head>
+<body>
+
+    <div class="tool-window">
+        <div class="title-bar">
+            <div>WorldVertex_Forge.exe - Blend Texture Compiler</div>
+        </div>
+        
+        <div class="main-layout">
+            <div class="left-panel">
+                <fieldset>
+                    <legend>Primary Texture (Top-Left / $basetexture)</legend>
+                    <div class="form-row">
+                        <label>Image Source</label>
+                        <input type="file" id="file1" accept="image/*">
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col">
+                            <label>Base Filename</label>
+                            <input type="text" id="name1" placeholder="e.g. grass01">
+                        </div>
+                        <div class="flex-col">
+                            <label>$surfaceprop</label>
+                            <input type="text" id="surf1" value="grass">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Secondary Texture (Bottom-Right / $basetexture2)</legend>
+                    <div class="form-row">
+                        <label>Image Source</label>
+                        <input type="file" id="file2" accept="image/*">
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col">
+                            <label>Base Filename</label>
+                            <input type="text" id="name2" placeholder="e.g. dirt01">
+                        </div>
+                        <div class="flex-col">
+                            <label>$surfaceprop2</label>
+                            <input type="text" id="surf2" value="dirt">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Material Directory & Shader Parameters</legend>
+                    <div class="form-row">
+                        <label>Subfolder in materials/</label>
+                        <input type="text" id="folder" value="nature">
+                    </div>
+                    <div class="form-row">
+                        <label>Output VMT Name</label>
+                        <input type="text" id="blendName" value="blend_grass_dirt">
+                    </div>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="bumpmaps">
+                        Include $bumpmap and $bumpmap2 normal map definitions
+                    </label>
+                </fieldset>
+            </div>
+
+            <div class="right-panel">
+                <div class="author-tag">Tool made by <span>FILipKOS</span></div>
+
+                <div class="preview-box">
+                    <label style="margin-bottom:6px;">%tooltexture Preview (Hammer Icon)</label>
+                    <canvas id="preview" width="512" height="512"></canvas>
+                </div>
+                
+                <label style="color: #f39c12; margin-bottom: 4px;">Compiled .VMT Output:</label>
+                <div id="vmtDisplay" class="terminal"></div>
+
+                <div class="flex-row" style="margin-bottom:0;">
+                    <button id="dlToolBtn" disabled style="flex:1;">Save Tooltexture</button>
+                    <button id="dlVmtBtn" class="btn-action" style="flex:1;">Save .VMT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('preview');
+        const ctx = canvas.getContext('2d');
+        
+        let img1 = null;
+        let img2 = null;
+
+        function handleFile(input, callback) {
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => callback(img, file.name);
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        handleFile(document.getElementById('file1'), (img, filename) => {
+            img1 = img;
+            const base = filename.substring(0, filename.lastIndexOf('.')) || filename;
+            document.getElementById('name1').value = base;
+            updateNames();
+            render();
+        });
+
+        handleFile(document.getElementById('file2'), (img, filename) => {
+            img2 = img;
+            const base = filename.substring(0, filename.lastIndexOf('.')) || filename;
+            document.getElementById('name2').value = base;
+            updateNames();
+            render();
+        });
+
+        function updateNames() {
+            const n1 = document.getElementById('name1').value || 'tex1';
+            const n2 = document.getElementById('name2').value || 'tex2';
+            document.getElementById('blendName').value = `blend_${n1}_${n2}`;
+            render();
+        }
+
+        function render() {
+            ctx.clearRect(0, 0, 512, 512);
+
+            // Placeholder when no images are present
+            if (!img1 && !img2) {
+                ctx.fillStyle = "#0d0d0d";
+                ctx.fillRect(0, 0, 512, 512);
+                ctx.fillStyle = "#555";
+                ctx.font = "bold 18px 'Segoe UI', Tahoma, monospace";
+                ctx.textAlign = "center";
+                ctx.fillText("NO TEXTURES MOUNTED", 256, 240);
+                ctx.font = "14px 'Segoe UI', Tahoma, monospace";
+                ctx.fillText("Awaiting Primary & Secondary Image...", 256, 270);
+                return;
+            }
+
+            // Draw Image 2 across entire canvas
+            if (img2) {
+                ctx.drawImage(img2, 0, 0, 512, 512);
+            } else {
+                ctx.fillStyle = "#222";
+                ctx.fillRect(0, 0, 512, 512);
+            }
+
+            // Clip top-left diagonal triangle and draw Image 1
+            if (img1) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(512, 0);
+                ctx.lineTo(0, 512);
+                ctx.closePath();
+                ctx.clip();
+                ctx.drawImage(img1, 0, 0, 512, 512);
+                ctx.restore();
+            }
+
+            // Draw dividing line
+            ctx.beginPath();
+            ctx.moveTo(512, 0);
+            ctx.lineTo(0, 512);
+            ctx.strokeStyle = "rgba(0, 0, 0, 0.85)";
+            ctx.lineWidth = 6;
+            ctx.stroke();
+
+            document.getElementById('dlToolBtn').disabled = !(img1 || img2);
+            updateVmtPreview();
+        }
+
+        function getVMTContent() {
+            const folder = document.getElementById('folder').value.trim().replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
+            const prefix = folder ? folder + '/' : '';
+            const name1 = document.getElementById('name1').value || 'tex1';
+            const name2 = document.getElementById('name2').value || 'tex2';
+            const blend = document.getElementById('blendName').value || 'blend_texture';
+            const surf1 = document.getElementById('surf1').value || 'default';
+            const surf2 = document.getElementById('surf2').value || 'default';
+            const hasBump = document.getElementById('bumpmaps').checked;
+
+            let vmt = `// Compiled via WorldVertex_Forge (FILipKOS)\n`;
+            vmt += `"WorldVertexTransition"\n{\n`;
+            vmt += `\t"$basetexture"\t\t"${prefix}${name1}"\n`;
+            vmt += `\t"$basetexture2"\t\t"${prefix}${name2}"\n`;
+            vmt += `\t"%tooltexture"\t\t"${prefix}${blend}_tool"\n`;
+            vmt += `\t"$surfaceprop"\t\t"${surf1}"\n`;
+            vmt += `\t"$surfaceprop2"\t\t"${surf2}"\n`;
+
+            if (hasBump) {
+                vmt += `\t"$bumpmap"\t\t"${prefix}${name1}_normal"\n`;
+                vmt += `\t"$bumpmap2"\t\t"${prefix}${name2}_normal"\n`;
+            }
+
+            vmt += `}`;
+            return vmt;
+        }
+
+        function updateVmtPreview() {
+            document.getElementById('vmtDisplay').textContent = getVMTContent();
+        }
+
+        // Listeners
+        ['name1', 'name2', 'surf1', 'surf2', 'folder', 'blendName', 'bumpmaps'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                render();
+                updateVmtPreview();
+            });
+        });
+
+        // Downloads
+        document.getElementById('dlToolBtn').addEventListener('click', () => {
+            const blend = document.getElementById('blendName').value || 'blend_texture';
+            const link = document.createElement('a');
+            link.download = `${blend}_tool.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+
+        document.getElementById('dlVmtBtn').addEventListener('click', () => {
+            const blend = document.getElementById('blendName').value || 'blend_texture';
+            const blob = new Blob([getVMTContent()], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.download = `${blend}.vmt`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+            URL.revokeObjectURL(link.href);
+        });
+
+        render();
+    </script>
+</body>
+</html>
