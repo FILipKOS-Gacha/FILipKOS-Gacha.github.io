@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Gacha Club (not sure)</title>
-    <script src="https://unpkg.com/@ruffle/ruffle"></script>
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <style>
         body {
             font-family: 'Trebuchet MS', sans-serif;
@@ -44,21 +44,21 @@
      </header>
 
     <div class="game-container">
-        <script src="https://cdn.jsdelivr.net/gh/ruffle-rs/ruffle@latest/ruffle.js"></script>
-        <script>
-            window.addEventListener('load', function () {
-                const ruffle = window.RufflePlayer.newest();
-                const rufflePlayer = ruffle.createPlayer();
-                document.querySelector('.game-container').appendChild(rufflePlayer);
-            ruffle.load("gacha_clubPC.swf");
+    <script>
+        window.addEventListener('load', function () {
+            const ruffle = window.RufflePlayer.newest();
+            const rufflePlayer = ruffle.createPlayer();
+            rufflePlayer.id = "ruffle-player";
+            document.querySelector('.game-container').appendChild(rufflePlayer);
+            rufflePlayer.load("gacha_clubPC.swf");
         });
-        </script>
-    </div>
+    </script>
+</div>
 
     <a href="https://filipkos-gacha.github.io" class="return-link">Return to Main Page</a>
 
     <footer>
-        <p>© 2024 FILipKOS | <a href="https://github.com/FILipKOS-Gacha" style="color: #3498db;">GitHub Profile</a></p>
+        <p>© 2024-2026 FILipKOS | <a href="https://github.com/FILipKOS-Gacha" style="color: #3498db;">GitHub Profile</a></p>
     </footer>
 </body>
 </html>
