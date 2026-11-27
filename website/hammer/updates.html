@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worldcraft++ - Updates</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=0.2.1">
 </head>
 <body>
 
@@ -29,10 +29,133 @@
         <!-- Main Content Area -->
         <main class="content-container">
             <section class="intro-box">
-                <h2>Changelog & Updates</h2>
+                <h2>Changelog &amp; Updates</h2>
 
-                <!-- LATEST ANNOUNCEMENT -->
-                <details class="update-block sound-btn" open>
+                <details class="update-block" id="v0-2-1" open>
+                    <summary class="update-header">27.11.2026 &mdash; Public Beta v0.2.1 - Texture Browser Hotfix</summary>
+                    <div class="update-content">
+                        <h3>Fixes</h3>
+                        <ul>
+                            <li>Fixed the Texture Browser becoming empty after reopening it.</li>
+                            <li>Fixed Texture Browser initialization and cleanup issues.</li>
+                            <li>Fixed stale texture selection and layout states.</li>
+                            <li>Fixed an issue with the Only Used Textures filter when no map is open.</li>
+                            <li>Fixed a potential buffer overflow when selecting texture groups.</li>
+                            <li>Improved error handling.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="update-block" id="v0-2">
+                    <summary class="update-header">27.11.2026 &mdash; Public Beta v0.2 - Major Update</summary>
+                    <div class="update-content">
+                        <h3>Fixes</h3>
+                        <ul>
+                            <li>Editing or painting displacements no longer crashes the editor.</li>
+                            <li>VMF files can now be saved in any directory; the editor no longer requires them to be saved in the game&#x27;s map directory.</li>
+                            <li>Fixed a rare crash in the Texture Browser.</li>
+                            <li>Experimental attempt to address lag on AMD GPUs.</li>
+                            <li>Code optimizations.</li>
+                            <li>Fixed VisGroups (holy shit, finally).</li>
+                            <li>VMF saving no longer reports success after a failed save and now creates a backup of the VMF.</li>
+                            <li>Fixed compiler process and pipe handle leaks.</li>
+                            <li>Failed or cancelled compilations now retain their temporary files for troubleshooting.</li>
+                        </ul>
+                        <h3>Features</h3>
+                        <ul>
+                            <li>Added the ability to change the FPS cap (including uncapped FPS) and FOV in the 3D view.</li>
+                            <li>Added an option to disable Discord RPC.</li>
+                            <li>Updated the editor startup splash screen.</li>
+                            <li>The editor now creates a copy of the VMF during map compilation in case of a crash or corruption.</li>
+                            <li>3D skyboxes are now rendered in the map.</li>
+                            <li>Worldcraft++ now remembers its window size after closing.</li>
+                            <li>Added private map snapshots to prevent ongoing edits from interfering with compilation.</li>
+                            <li>Added a Cancel Compile button.</li>
+                            <li>Improved compiler output handling and error reporting.</li>
+                            <li>Added background map compilation.</li>
+                            <li>Reworked the compile process window into an independent window.</li>
+                            <li>3D viewport rendering is no longer disabled during compilation.</li>
+                        </ul>
+                        <h3>2D View</h3>
+                        <ul>
+                            <li>Backported some features from the 2007 Source code.</li>
+                            <li>Removed synchronous repainting during panning.</li>
+                            <li>Fixed incorrect scrollbar boundaries.</li>
+                            <li>Reused the existing GDI device context instead of creating an additional one during rendering.</li>
+                            <li>Removed unnecessary copying of old window pixels during panning.</li>
+                        </ul>
+                        <h3>3D View</h3>
+                        <ul>
+                            <li>Fixed geometry-based model picking.</li>
+                            <li>Fixed issues with hit ordering and buffer handling.</li>
+                            <li>Ropes now use textures instead of thin RGB lines.</li>
+                            <li>Skybox preview can now be enabled through the Camera button.</li>
+                        </ul>
+                        <h3>Model Browser - Major Improvement</h3>
+                        <ul>
+                            <li>Preview models now use independent model instances instead of cached models shared with map entities.</li>
+                            <li>The preview camera now persists throughout the dialog&#x27;s lifetime.</li>
+                            <li>Double-clicking empty list space no longer confirms the selection.</li>
+                            <li>Model information no longer incorrectly implies that every model supports prop_static/$staticprop.</li>
+                            <li>Added a minimum dialog resize limit.</li>
+                            <li>Directory junctions are skipped to prevent scanning loops.</li>
+                            <li>Redesigned the Model Browser.</li>
+                            <li>Added a session-level index cache.</li>
+                            <li>Fixed the camera.</li>
+                        </ul>
+                        <h3>Displacements</h3>
+                        <ul>
+                            <li>Improved displacement editing accuracy and stability: the brush now follows the actual terrain surface instead of jumping between vertices.</li>
+                            <li>Updated AutoSew.</li>
+                            <li>Optimized geometry recalculation so that surfaces with newly queued vertex changes are rebuilt.</li>
+                            <li>Improved the Undo manager.</li>
+                        </ul>
+                        <h3>Texture Browser</h3>
+                        <ul>
+                            <li>Fixed potential crashes caused by long search queries and material names.</li>
+                            <li>Fixed crashes when no textures matched the search filter.</li>
+                            <li>Fixed double-clicking empty space in the Texture Browser.</li>
+                            <li>Fixed incorrect texture selection after changing search filters.</li>
+                            <li>Fixed the Show Errors checkbox not working properly.</li>
+                            <li>Fixed several scrollbar and texture highlighting issues.</li>
+                            <li>Fixed crashes caused by invalid material previews.</li>
+                            <li>Improved search filter handling.</li>
+                            <li>Added a message when no textures match the search.</li>
+                            <li>The Texture Browser now remembers the last used keyword filter during the session.</li>
+                            <li>Fixed an issue with restoring invalid Texture Browser window positions.</li>
+                            <li>Fixed an issue with legacy WAL texture names.</li>
+                            <li>Fixed a crash when browsing used textures without an active map.</li>
+                            <li>Optimized Texture Browser performance.</li>
+                            <li>Added caching for texture search results.</li>
+                            <li>Added incremental loading of texture previews.</li>
+                            <li>Improved scrolling and mouse wheel handling.</li>
+                            <li>Optimized texture selection and thumbnail positioning.</li>
+                            <li>Improved performance when resizing the Texture Browser.</li>
+                            <li>Improved keyword and material-type filtering.</li>
+                            <li>Fixed unloaded materials appearing under incorrect material-type filters.</li>
+                            <li>Fixed failed material previews being repeatedly loaded.</li>
+                            <li>Reduced unnecessary texture enumeration and interface redraws.</li>
+                        </ul>
+                        <h3>Expert Mode</h3>
+                        <ul>
+                            <li>Reworked the Expert Mode compilation interface.</li>
+                            <li>Added 10 predefined compilation configurations.</li>
+                            <li>Added support for creating custom HDR compilation configurations.</li>
+                            <li>Added an option to restore missing default configurations.</li>
+                            <li>Added command duplication.</li>
+                            <li>Added configurable compiler process priority.</li>
+                            <li>Added automatic BSP publishing.</li>
+                            <li>Added required-file and compiler executable validation.</li>
+                            <li>Expert Mode now remembers the last selected configuration and compiler priority per game configuration.</li>
+                            <li>Improved compatibility with background compilation.</li>
+                            <li>Fixed several configuration management and command ordering issues.</li>
+                            <li>Fixed potential crashes caused by malformed configuration files.</li>
+                            <li>Improved configuration saving reliability.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="update-block sound-btn">
                     <summary class="update-header" style="color: #ffaa00;">Announcement - 1/4/26</summary>
                     <div class="update-content">
                         <p style="margin-top: 5px; line-height: 1.6;">Hello guys, Filip here.</p>
@@ -151,14 +274,16 @@
         const buttonSound = new Audio('sounds/launch_upmenu1.wav');
         buttonSound.volume = 0.5;
 
-        document.querySelectorAll('.sound-btn').forEach(btn => {
+        document.querySelectorAll('.main-nav .sound-btn, .update-header').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 buttonSound.currentTime = 0;
                 buttonSound.play().catch(err => { console.log("Audio blocked until interaction."); });
 
                 if (this.tagName.toLowerCase() === 'a' && this.href) {
                     const isHashLink = this.getAttribute('href').startsWith('#');
-                    if (!isHashLink && this.target !== "_blank") {
+                    if (!isHashLink && this.target !== "_blank" &&
+                        !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey &&
+                        e.button === 0 && !e.defaultPrevented) {
                         e.preventDefault(); 
                         const targetUrl = this.href;
                         setTimeout(() => {
