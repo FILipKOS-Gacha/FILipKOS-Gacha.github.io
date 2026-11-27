@@ -243,3 +243,158 @@ details:not([open]) .update-header {
     color: var(--highlight);
     box-shadow: inset 0px 4px 10px rgba(0,0,0,0.8);
 }
+
+/* Download page */
+.download-page .release-panel {
+    background-color: #21271b;
+    border: 1px solid var(--panel-border);
+    margin-top: 20px;
+    padding: 25px 20px;
+}
+
+.download-page .latest-release {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.download-page .release-panel h3 {
+    color: var(--highlight);
+    margin: 0 0 10px;
+    font-size: 20px;
+}
+
+.download-page .latest-release h3 {
+    font-size: 24px;
+}
+
+.download-page .release-label {
+    display: inline-block;
+    padding: 3px 9px;
+    margin-bottom: 12px;
+    background-color: var(--highlight);
+    color: #21271b;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.download-page .release-date,
+.download-page .release-note {
+    font-size: 12px;
+    color: var(--text-main);
+}
+
+.download-page .release-description {
+    margin: 20px 0 28px;
+}
+
+.download-page .big-download-btn {
+    max-width: 100%;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.download-page .release-links {
+    margin: 15px 0 0;
+    font-size: 13px;
+}
+
+.download-page .release-links a,
+.download-page .download-support a {
+    color: var(--highlight);
+    text-decoration: none;
+}
+
+.download-page .release-links a:hover,
+.download-page .download-support a:hover {
+    color: var(--text-bright);
+    text-decoration: underline;
+}
+
+.download-page .legacy-entry {
+    background-color: #2e3626;
+    border: 1px solid var(--panel-border);
+    margin-top: 18px;
+    padding: 18px;
+}
+
+.download-page .legacy-entry h4 {
+    font-size: 17px;
+    color: var(--text-main);
+    margin: 0 0 8px;
+}
+
+.download-page .legacy-label {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 2px 7px;
+    margin-left: 6px;
+    background-color: #384030;
+    border: 1px solid var(--panel-border);
+    color: var(--text-main);
+    font-size: 10px;
+}
+
+.download-page .legacy-download-btn {
+    font-size: 14px;
+    padding: 10px 18px;
+    color: var(--text-main);
+}
+
+.download-page .legacy-download-btn:hover {
+    color: var(--text-bright);
+}
+
+.download-page a:focus-visible {
+    outline: 2px solid var(--highlight);
+    outline-offset: 3px;
+}
+
+.download-page .download-support {
+    text-align: center;
+    margin: 20px 0 0;
+    font-size: 12px;
+}
+
+@media (max-width: 600px) {
+    .page-wrapper.download-page {
+        margin: 10px;
+    }
+
+    .download-page .main-header {
+        padding: 24px 15px;
+    }
+
+    .download-page .main-nav {
+        flex-wrap: wrap;
+    }
+
+    .download-page .main-nav a {
+        flex: 1 1 50%;
+        padding: 10px;
+    }
+
+    .download-page .content-container {
+        padding: 12px;
+    }
+
+    .download-page .intro-box {
+        padding: 15px 12px;
+    }
+
+    .download-page .release-panel,
+    .download-page .legacy-entry {
+        padding: 18px 12px;
+    }
+
+    .download-page .big-download-btn {
+        width: 100%;
+        font-size: 16px;
+        padding: 14px 12px;
+    }
+
+    .download-page .legacy-download-btn {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+}

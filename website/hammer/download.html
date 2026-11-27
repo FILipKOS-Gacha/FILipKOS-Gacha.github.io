@@ -8,9 +8,8 @@
 </head>
 <body>
 
-    <div class="page-wrapper">
-        
-        <!-- Header Banner -->
+    <div class="page-wrapper download-page">
+
         <header class="main-header">
             <div class="header-content" style="text-align: center;">
                 <img src="logo.png" alt="Worldcraft++" style="width: 100%; max-width: 450px; height: auto; display: block; margin: 0 auto 15px auto;">
@@ -21,7 +20,7 @@
         <nav class="main-nav">
             <a href="index.html" class="sound-btn">Home</a>
             <a href="updates.html" class="sound-btn">Updates</a>
-            <a href="download.html" class="sound-btn active">Download</a>
+            <a href="download.html" class="sound-btn active" aria-current="page">Download</a>
             <a href="credits.html" class="sound-btn">Credits</a>
         </nav>
 
@@ -29,25 +28,61 @@
             <section class="intro-box">
                 <h2>Download Worldcraft++</h2>
 
-                <div style="text-align: center; padding: 40px 20px; background-color: #21271b; border: 1px solid var(--panel-border); margin-top: 20px;">
-                    <h3 style="color: var(--highlight); font-size: 24px; margin-top: 0;">Public Beta v0.1 is LIVE!</h3>
-                    <p style="margin-bottom: 30px; font-size: 15px;">The first official beta-test release of Worldcraft++ is now available.<br>Thank you to everyone who has waited patiently!</p>
-                    
-                    <!-- The Big Download Button -->
-                    <a href="https://github.com/FILipKOS-Gacha/FILipKOS-Gacha.github.io/releases/download/beta_test-release/Beta-test_W++_v0.1.zip" class="sound-btn big-download-btn">
-                        Download Worldcraft++ v0.1 Beta (.ZIP)
-                    </a>
-                    
-                    <p style="margin-top: 20px; font-size: 12px; color: #758461;">Please report any crashes or bugs on Discord or <a href=https://github.com/FILipKOS-Gacha/worldcraftplusplus-issue-tracker>GitHub</a> repository.</p>
-                </div>
+                <section class="release-panel latest-release" aria-labelledby="latest-release-title">
+                    <span class="release-label">LATEST RELEASE</span>
+                    <h3 id="latest-release-title">Public Beta v0.2 is LIVE!</h3>
+                    <p class="release-date">Released <time datetime="2026-11-27">November 27, 2026</time></p>
+                    <p class="release-description">
+                        The second official beta-test release of Worldcraft++ is now available!
+                        <br><br>
+                        This update brings bug fixes, stability improvements,
+                        performance optimizations and quality-of-life changes.
+                        <br>
+                        Thank you to everyone who has supported and tested Worldcraft++!
+                    </p>
 
+                    <a href="https://github.com/FILipKOS-Gacha/FILipKOS-Gacha.github.io/releases/download/second-beta_test-release/Beta-test_W++_v0.2.zip" class="sound-btn big-download-btn">
+                        Download Worldcraft++ v0.2 Beta (.ZIP)
+                    </a>
+                    <p class="release-links">
+                        <a href="https://github.com/FILipKOS-Gacha/FILipKOS-Gacha.github.io/releases/tag/second-beta_test-release" class="sound-btn">View Release Notes</a>
+                    </p>
+                    <p class="release-note">This is the latest recommended version of Worldcraft++.</p>
+                </section>
+
+                <section class="release-panel legacy-releases" aria-labelledby="legacy-releases-title">
+                    <h3 id="legacy-releases-title">Legacy Releases</h3>
+                    <p>Previous versions of Worldcraft++ remain available for compatibility, testing and archival purposes.</p>
+                    <p class="release-note">
+                        Legacy versions may contain bugs and stability issues addressed in newer releases.
+                        Use legacy version only if you experience bugs in latest release.
+                    </p>
+
+                    <article class="legacy-entry">
+                        <h4>Public Beta v0.1 <span class="legacy-label">LEGACY</span></h4>
+                        <p>The first official public beta-test release of Worldcraft++.</p>
+                        <a href="https://github.com/FILipKOS-Gacha/FILipKOS-Gacha.github.io/releases/download/beta_test-release/Beta-test_W++_v0.1.zip" class="sound-btn big-download-btn legacy-download-btn">
+                            Download Worldcraft++ v0.1 Beta (.ZIP)
+                        </a>
+                        <p class="release-links">
+                            <a href="https://github.com/FILipKOS-Gacha/FILipKOS-Gacha.github.io/releases/tag/beta_test-release" class="sound-btn">View Original Release</a>
+                        </p>
+                    </article>
+                </section>
+
+                <p class="download-support">
+                    Found a bug or experienced a crash? Please report it on Discord or through the
+                    <a href="https://github.com/FILipKOS-Gacha/worldcraftplusplus-issue-tracker" class="sound-btn">GitHub Issue Tracker</a>.
+                    <br>
+                    When reporting an issue, please specify your version of Worldcraft++.
+                </p>
             </section>
         </main>
-        
+
         <footer>
             <p>Worldcraft++ is a custom build of Leaked Hammer Editor created by FILipKOS. • Not affiliated with Valve Software or Hammer++!</p>
         </footer>
-        
+
     </div>
 
     <script>
@@ -57,18 +92,26 @@
 
         document.querySelectorAll('.sound-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
-                // Rewind and play sound
+                // Preserve normal browser behavior for modified clicks.
+                if (e.defaultPrevented || e.button !== 0 || e.ctrlKey ||
+                    e.metaKey || e.shiftKey || e.altKey) {
+                    return;
+                }
+
                 buttonSound.currentTime = 0;
-                buttonSound.play().catch(err => { console.log("Audio blocked until interaction."); });
+                buttonSound.play().catch(err => {
+                    console.log("Audio blocked until interaction.");
+                });
 
                 if (this.tagName.toLowerCase() === 'a' && this.href) {
                     const isHashLink = this.getAttribute('href').startsWith('#');
+
                     if (!isHashLink && this.target !== "_blank") {
-                        e.preventDefault(); 
+                        e.preventDefault();
                         const targetUrl = this.href;
                         setTimeout(() => {
                             window.location.href = targetUrl;
-                        }, 200); 
+                        }, 200);
                     }
                 }
             });
