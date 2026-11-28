@@ -28,22 +28,22 @@
             <section class="intro-box">
                 <h2>Download Worldcraft++</h2>
 
+                <!-- Latest Release -->
                 <section class="release-panel latest-release" aria-labelledby="latest-release-title">
                     <span class="release-label">LATEST RELEASE</span>
-                    <h3 id="latest-release-title">Public Beta v0.2.1 - Texture Browser Hotfix</h3>
-                    <p class="release-date">Released <time datetime="2026-11-27">November 27, 2026</time></p>
+                    <h3 id="latest-release-title">Public Beta v0.2.2 - Hotfix</h3>
+                    <p class="release-date">Released <time datetime="2026-11-28">November 28, 2026</time></p>
                     <p class="release-description">
-                        A hotfix for Public Beta v0.2 is now available.
+                        The latest hotfix for Public Beta v0.2 is now available.
                         <br><br>
-                        This release addresses Texture Browser initialization, cleanup,
-                        filtering and selection issues, including the browser becoming empty after reopening.
+                        This release supersedes the previous hotfix and is the recommended version for all users.
                     </p>
 
-                    <a href="https://github.com/FILipKOS-Gacha/FILipKOS-Gacha.github.io/releases/download/hotfix/Beta-test_W++_v0.2.1.zip" class="sound-btn big-download-btn">
-                        Download Worldcraft++ v0.2.1 Beta (.ZIP)
+                    <a href="https://github.com/FILipKOS-Gacha/FILipKOS-Gacha.github.io/releases/download/hotfix2/Beta-test_W++_v0.2.2.zip" class="sound-btn big-download-btn">
+                        Download Worldcraft++ v0.2.2 Beta (.ZIP)
                     </a>
                     <p class="release-links">
-                        <a href="updates.html#v0-2-1" class="sound-btn">View Release Notes</a>
+                        <a href="updates.html" class="sound-btn">View Release Notes</a>
                     </p>
                     <p class="release-note">This is the latest recommended version of Worldcraft++.</p>
                 </section>
@@ -59,7 +59,7 @@
 
                     <article class="legacy-entry">
                         <h4>Public Beta v0.2 <span class="legacy-label">LEGACY</span></h4>
-                        <p>The second public beta release, before the Texture Browser hotfix.</p>
+                        <p>The second public beta release, before the subsequent hotfixes.</p>
                         <a href="https://github.com/FILipKOS-Gacha/FILipKOS-Gacha.github.io/releases/download/second-beta_test-release/Beta-test_W++_v0.2.zip" class="sound-btn big-download-btn legacy-download-btn">
                             Download Worldcraft++ v0.2 Beta (.ZIP)
                         </a>
@@ -102,7 +102,6 @@
 
         document.querySelectorAll('.sound-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
-                // Preserve normal browser behavior for modified clicks.
                 if (e.defaultPrevented || e.button !== 0 || e.ctrlKey ||
                     e.metaKey || e.shiftKey || e.altKey) {
                     return;

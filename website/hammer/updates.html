@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worldcraft++ - Updates</title>
-    <link rel="stylesheet" href="styles.css?v=0.2.1">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <div class="page-wrapper">
         
-        <!-- Header Banner -->
         <header class="main-header">
             <div class="header-content" style="text-align: center;">
                 <img src="logo.png" alt="Worldcraft++" style="width: 100%; max-width: 450px; height: auto; display: block; margin: 0 auto 15px auto;">
@@ -18,7 +17,6 @@
             </div>
         </header>
 
-        <!-- Navigation Bar -->
         <nav class="main-nav">
             <a href="index.html" class="sound-btn">Home</a>
             <a href="updates.html" class="sound-btn active">Updates</a>
@@ -31,8 +29,35 @@
             <section class="intro-box">
                 <h2>Changelog &amp; Updates</h2>
 
-                <details class="update-block" id="v0-2-1" open>
-                    <summary class="update-header">27.11.2026 &mdash; Public Beta v0.2.1 - Texture Browser Hotfix</summary>
+                <details class="update-block" id="v0-2-2" open>
+                    <summary class="update-header">28.11.2026 &mdash; - Hotfix</summary>
+                    <div class="update-content">
+                        <h3>Fixes &amp; Improvements</h3>
+                        <ul>
+                            <li>Fixed materials from the models/ directory appearing in ordinary texture browsing.</li>
+                            <li>Fixed material directory exclusions not working properly.</li>
+                            <li>Fixed several issues with saving and copying material exclusion settings.</li>
+                            <li>Fixed Only Used Textures not displaying any textures.</li>
+                            <li>Fixed a crash caused by creating spheres with too many subdivisions.</li>
+                            <li>Fixed incorrect selection coordinates in free-camera mode.</li>
+                            <li>Fixed automatic selection cycling while using free-camera mode.</li>
+                            <li>Fixed several potential material enumeration issues.</li>
+                            <li>Increased the editor&#x27;s brush face limit from 256 to 1024.</li>
+                            <li>Reworked internal brush storage to allocate memory dynamically.</li>
+                            <li>Restored support for creating spheres with up to 32 subdivisions.</li>
+                            <li>Improved vertex manipulation support for complex brushes.</li>
+                            <li>Fixed several potential geometry buffer overflows.</li>
+                            <li>Improved brush clipping and decal rendering stability.</li>
+                            <li>Added a warning when compiling brushes that may exceed the compiler&#x27;s supported face limit.</li>
+                            <li>Replaced the old material exclusion folder browser with a modern Windows folder picker.</li>
+                            <li>Excluded materials are no longer loaded unnecessarily in the background.</li>
+                        </ul>
+                        <p><em>Special thanks to <strong>Le Glaconus</strong> for reporting these issues.</em></p>
+                    </div>
+                </details>
+
+                <details class="update-block" id="v0-2-1">
+                    <summary class="update-header">27.11.2026 &mdash; - Texture Browser Hotfix</summary>
                     <div class="update-content">
                         <h3>Fixes</h3>
                         <ul>
@@ -47,7 +72,7 @@
                 </details>
 
                 <details class="update-block" id="v0-2">
-                    <summary class="update-header">27.11.2026 &mdash; Public Beta v0.2 - Major Update</summary>
+                    <summary class="update-header">27.11.2026 &mdash; - Major Update</summary>
                     <div class="update-content">
                         <h3>Fixes</h3>
                         <ul>
@@ -165,7 +190,6 @@
                     </div>
                 </details>
 
-                <!-- NEW UPDATE: 4/3/26 to 31/3/26 -->
                 <details class="update-block sound-btn">
                     <summary class="update-header">Update - 4/3/26 to 31/3/26</summary>
                     <div class="update-content">
@@ -196,7 +220,6 @@
                     </div>
                 </details>
 
-                <!-- OLD ANNOUNCEMENT: 12/3/26 (Now closed by default) -->
                 <details class="update-block sound-btn">
                     <summary class="update-header" style="color: #ffaa00;">Announcement - 12/3/26</summary>
                     <div class="update-content">
@@ -206,7 +229,6 @@
                     </div>
                 </details>
                 
-                <!-- PREVIOUS UPDATE: 19/2/26 -->
                 <details class="update-block sound-btn">
                     <summary class="update-header">Update - 19/2/26</summary>
                     <div class="update-content">
@@ -233,7 +255,6 @@
                     </div>
                 </details>
 
-                <!-- OLD UPDATE: 8/2/26 -->
                 <details class="update-block sound-btn">
                     <summary class="update-header">Update - 8/2/26</summary>
                     <div class="update-content">
